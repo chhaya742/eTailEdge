@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from '@next/font/google'
 
 
@@ -17,7 +16,7 @@ export default function Home() {
       </Head>
       <main >
         <div >
-          <Image className="w-full h-screen" src="/homepag.jpg" alt='codeswear' width={10000} height={10000} />
+          <img className="w-full h-screen h-100 w-100" src="/homepag.jpg" alt='codeswear' />
         </div>
         <div>
           <section className="text-gray-600 body-font">
