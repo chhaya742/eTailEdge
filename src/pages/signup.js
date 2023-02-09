@@ -4,7 +4,7 @@ const Signup = () => {
   return (
     <div>
       <div className="bg-grey-lighter min-h-screen flex flex-col">
-        <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2 py-5">
+        <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-2 py-5">
           <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white pt-4">
             <img className="w-8 h-8 mr-2" src="/images-modified.png" alt="logo" />
             CodesWear
