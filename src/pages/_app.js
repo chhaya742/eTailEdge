@@ -3,8 +3,6 @@ import "../styles/globals.css";
 import Footer from 'components/Footer'
 import NavBar from 'components/NavBar'
 import { useEffect, useState } from "react";
-import { AiOutlineConsoleSql } from "react-icons/Ai";
-
 
 export default function App({ Component, pageProps }) {
   const [cart, setCart] = useState({})

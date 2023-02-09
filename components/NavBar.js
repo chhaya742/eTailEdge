@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 
-import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/Ai'
-import { BsFillBagCheckFill } from 'react-icons/Bs'
-import { MdAccountCircle } from 'react-icons/Md'
+import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai'
+import { BsFillBagCheckFill } from 'react-icons/bs'
+import { MdAccountCircle } from 'react-icons/md'
 const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
     const [toggle, settoggle] = useState(false)
     const toggleCart = () => {

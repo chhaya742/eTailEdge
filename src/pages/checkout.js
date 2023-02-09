@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/Ai'
-import { BsFillBagCheckFill } from 'react-icons/bs'
+import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 
 const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
-import { FaFacebookF } from 'react-icons/Fa';
-import { TiSocialTwitter, TiSocialLinkedin, TiSocialInstagram } from 'react-icons/Ti';
+import { FaFacebookF } from 'react-icons/fa';
+import { TiSocialTwitter, TiSocialLinkedin, TiSocialInstagram } from 'react-icons/ti';
 
 const Footer = () => {
     return (
