@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 
 import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/Ai'
-import { BsFillBagCheckFill } from 'react-icons/bs'
+import { BsFillBagCheckFill } from 'react-icons/Bs'
+import { MdAccountCircle } from 'react-icons/Md'
 const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
     const [toggle, settoggle] = useState(false)
     const toggleCart = () => {
@@ -13,9 +14,12 @@ const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
     }
     return (
         <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
-            <div className='logo mx-5'>
-                <Link href={"/"}> <img src="/logo.png" alt="" className="w-40 h-15" /></Link>
 
+            <div className='logo flex items-center' >
+                <div className='mx-2'>
+                <Link href={"/login"}> <MdAccountCircle className='text-xl md:text-2xl cursor-pointer' /></Link>
+                </div>
+                <Link href={"/"} className="mr-1"> <img src="/logo.png" alt="" className="w-40 h-15" /></Link>
             </div>
 
             <div className='nav'>
@@ -26,7 +30,7 @@ const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
                     <Link href={"/mugs"}><li>Mugs</li></Link>
                 </ul>
             </div>
-            <div onClick={toggleCart} className='cart absolute right-0 top-4 mx-5'>
+            <div onClick={toggleCart} className='cart mx-5 absolute top-4 right-0'>
                 <AiOutlineShoppingCart className='text-xl md:text-2xl cursor-pointer' />
             </div>
             {toggle && <div className={`w-72 h-34 sideCart absolute top-0 right-0 bg-pink-100 px-8 py-10 transform transition-transform`} >
