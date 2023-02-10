@@ -24,10 +24,10 @@ const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
 
             <div className='nav'>
                 <ul className='flex items-center space-x-5 font-bold md:text-base'>
-                    <Link href={"/tshirts"}><li >Tshirts</li></Link>
-                    <Link href={"/hoodies"}><li >Hoodies</li></Link>
-                    <Link href={"/stickers"}><li>Stickers</li></Link>
-                    <Link href={"/mugs"}><li>Mugs</li></Link>
+                    <Link href={"/category/tshirts"}><li >Tshirts</li></Link>
+                    <Link href={"/category/hoodies"}><li >Hoodies</li></Link>
+                    <Link href={"/category/stickers"}><li>Stickers</li></Link>
+                    <Link href={"/category/mugs"}><li>Mugs</li></Link>
                 </ul>
             </div>
             <div onClick={toggleCart} className='cart mx-5 absolute top-4 right-0'>

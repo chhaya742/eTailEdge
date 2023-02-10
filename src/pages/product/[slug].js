@@ -2,15 +2,14 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
 const Slug = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
-
   const router = useRouter()
   const { slug } = router.query
   const [pin, setpin] = useState()
   const [service, setservice] = useState()
+
   const CheckServiceAbility = async () => {
     let data = await fetch("http://localhost:3000/api/pincode")
     data = await data.json();
-  
     if (data.pincode.includes(parseInt(pin))) {
       setservice(true)
     } else {
@@ -121,5 +120,13 @@ const Slug = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
     </>
   )
 }
+
+// export async function getServerSideProps(context){
+//   let data = await fetch("http://localhost:3000/api/pincode")
+//   data = await data.json();
+//   return{
+//     props:{data}
+//   }
+// };
 
 export default Slug
