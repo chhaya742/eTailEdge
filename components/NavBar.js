@@ -17,12 +17,13 @@ const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
 
             <div className='logo flex items-center' >
                 <div className='mx-2'>
-                <Link href={"/login"}> <MdAccountCircle className='text-xl md:text-2xl cursor-pointer' /></Link>
+                    <Link href={"/login"}> <MdAccountCircle className='text-xl md:text-2xl cursor-pointer' /></Link>
                 </div>
                 <Link href={"/"} className="mr-1"> <img src="/logo.png" alt="" className="w-40 h-15" /></Link>
             </div>
 
             <div className='nav'>
+             
                 <ul className='flex items-center space-x-5 font-bold md:text-base'>
                     <Link href={"/category/tshirts"}><li >Tshirts</li></Link>
                     <Link href={"/category/hoodies"}><li >Hoodies</li></Link>

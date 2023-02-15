@@ -3,9 +3,29 @@ export default async function handler(req, res) {
     const slug = req.query.slug
     if (slug == "product-list") {
         try {
-            const data = await knex("product").select("*").where({"category":req.body.category})
-            res.status(200).json({ status: true, message: "product list", data: data })
+            const data = await knex("product").select("*").where(req.body)
+            let tshirts = {}
+            for (let item of data) {
+             
+                // if (item.title in tshirts) {
+                //     console.log(item.title);
+                //     if (!tshirts[item.title].color.includes(item.color) && item.availableqyt > 0) {
+                //         tshirts[item.title].color.push(item.color)
+                //     }
+                //     if (!tshirts[item.title].size.includes(item.size) && item.availableqyt > 0) {
+                //         tshirts[item.title].size.push(item.size)
+                //     }
+                // } else {
+                    tshirts[item.title] = JSON.parse(JSON.stringify(item))
+                    if (item.availableqyt > 0) {
+                        tshirts[item.title].color = ["red","green","black","gray"]
+                        tshirts[item.title].size = ["S","M","XL","XXL"]
+                    }
+                // }
+            }
+            res.status(200).json({ status: true, message: "product list", data: tshirts })
         } catch (error) {
+            console.log(error)
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         }
     }
@@ -22,9 +42,9 @@ export default async function handler(req, res) {
 
     if (slug == "update-product") {
         const inputData = req.body
-        const id =req.body.id
+        const id = req.body.id
         try {
-            const data = await knex("product").update(inputData).where({"id": id})
+            const data = await knex("product").update(inputData).where({ "id": id })
             res.status(200).json({ status: true, message: "product update successfully ", data: data })
         } catch (error) {
             console.log(error);

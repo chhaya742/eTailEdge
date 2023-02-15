@@ -62,9 +62,10 @@ export default function App({ Component, pageProps }) {
     saveCart(myCart)
   }
   return <>
-    <NavBar  cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
-    <Component cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
-    <Footer />
+  <NavBar  cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
+  <Component cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
+  <Footer />
+   
   </>
 
 }
