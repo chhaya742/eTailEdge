@@ -4,8 +4,14 @@ import Link from 'next/link'
 import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai'
 import { BsFillBagCheckFill } from 'react-icons/bs'
 import { MdAccountCircle } from 'react-icons/md'
-const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
+const NavBar = ({ user, cart, addToCart, removeCart, clearCart, subtl }) => {
+    const [dropDown, setDropDown] = useState(false)
     const [toggle, settoggle] = useState(false)
+
+    const toggleDropDown = () => {
+        setDropDown(!dropDown)
+    }
+
     const toggleCart = () => {
         settoggle(true)
     }
@@ -17,18 +23,28 @@ const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
 
             <div className='logo flex items-center' >
                 <div className='mx-2'>
-                    <Link href={"/login"}> <MdAccountCircle className='text-xl md:text-2xl cursor-pointer' /></Link>
+                {dropDown && <div className='absolute right-9 top-10 bg-pink-400 px-5 py-1 rounded-md'>
+                <ul className=''>
+                    <li className='py-1 hover:text-pink-700 text-sm'>order</li>
+                    <li className='py-1 hover:text-pink-700 text-sm'>myaccount</li>
+                    <li className='py-1 hover:text-pink-700 text-sm'>logout</li>
+                </ul>
+            </div>}
+                    {user.value && <MdAccountCircle onMouseOver={toggleDropDown} onMouseLeave={toggleDropDown} className='absolute right-16 top-4 right-0 text-xl md:text-2xl cursor-pointer' />}
+                   
+                    {!user.value && <Link href={"/login"}>
+                        <button className='bg-pink-600 px-1 py-1 rounded-md'>login</button>
+                    </Link>}
                 </div>
                 <Link href={"/"} className="mr-1"> <img src="/logo.png" alt="" className="w-40 h-15" /></Link>
             </div>
-
             <div className='nav'>
-             
                 <ul className='flex items-center space-x-5 font-bold md:text-base'>
-                    <Link href={"/category/tshirts"}><li  className=" hover:text-pink-500">Tshirts</li></Link>
-                    <Link href={"/category/hoodies"}><li  className=" hover:text-pink-500">Hoodies</li></Link>
+                    <Link href={"/category/tshirts"}><li className=" hover:text-pink-500">Tshirts</li></Link>
+                    <Link href={"/category/hoodies"}><li className=" hover:text-pink-500">Hoodies</li></Link>
                     <Link href={"/category/stickers"}><li className=" hover:text-pink-500">Stickers</li></Link>
                     <Link href={"/category/mugs"}><li className=" hover:text-pink-500">Mugs</li></Link>
+                    <Link href={"/category/gift"}><li className=" hover:text-pink-500">Gift</li></Link>
                 </ul>
             </div>
             <div onClick={toggleCart} className='cart mx-5 absolute top-4 right-0'>

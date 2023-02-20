@@ -1,6 +1,69 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from "next/link"
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+
 const Signup = () => {
+  const router = useRouter()
+  const [user, setUser] = useState({ name: "", email: "", password: "" });
+  const [error, setError] = useState({ isError: true })
+
+  const request = async () => {
+    const data = await axios.post('http://localhost:3000/api/authentication/signup', user)
+    console.log(data);
+    if (data.data.status) {
+    
+      toast.success("You have loged in successfully")
+      setTimeout(() => {
+        router.push("/")
+      }, 1000);
+    } else {
+      toast.error(data.data.message)
+    }
+  }
+  useEffect(() => {
+    if (!error.isError) {
+      request(user);
+    }
+  }, [error])
+
+  const handleInput = (e) => {
+    const { name, value } = e
+    setUser({ ...user, [name]: value })
+  }
+  const hamdleError = (user) => {
+    const { name, email, password } = user
+    const error = {};
+    let isError = false;
+    if (!name) {
+      error.name = "name is requiered";
+      isError = true;
+
+    }
+    if (!email) {
+      error.email = "email is requiered";
+      isError = true;
+
+    }
+    if (!password) {
+      error.password = "password is requiered";
+      isError = true;
+
+    }
+    error.isError = isError;
+    return error
+
+
+  }
+
+  const handleSubmit = () => {
+    const error = hamdleError(user);
+    setError(error)
+
+  }
+
+  console.log(user);
   return (
     <div>
       <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -10,13 +73,21 @@ const Signup = () => {
             CodesWear
           </a>
           <div className="w-full my-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
-
             <h1 className="mb-4 text-2xl text-center">Sign up</h1>
-            <input type="text" className="block border border-grey-light w-full p-3 rounded mb-4" name="fullname" placeholder="Full Name" />
-            <input type="text" className="block border border-grey-light w-full p-3 rounded mb-4" name="email" placeholder="Email" />
-            <input type="password" className="block border border-grey-light w-full p-3 rounded mb-4" name="password" placeholder="Password" />
-            <input type="password" className="block border border-grey-light w-full p-3 rounded mb-4" name="confirm_password" placeholder="Confirm Password" />
-            <button type="submit" className="w-full text-center py-2 px-8 rounded-lg text-black bg-pink-500  my-3" >Create Account</button>
+            <div>
+              <input onChange={(e) => handleInput(e.target)} type="text" value={user.name} className="block border border-grey-light w-full p-3 rounded mb-4" name="name" placeholder="Full Name" />
+              {error.name && <div style={{ color: "red" }}>{error.name}</div>}
+            </div>
+            <div>
+              <input onChange={(e) => handleInput(e.target)} type="text" value={user.email} className="block border border-grey-light w-full p-3 rounded mb-4" name="email" placeholder="Email" />
+              {error.email && <div style={{ color: "red" }}>{error.email}</div>}
+            </div>
+            <div>
+              <input onChange={(e) => handleInput(e.target)} type="password" value={user.password} className="block border border-grey-light w-full p-3 rounded mb-4" name="password" placeholder="Password" />
+              {error.password && <div style={{ color: "red" }}>{error.password}</div>}
+            </div>
+
+            <button onClick={(e) => handleSubmit(e)} type="submit" className="w-full text-center py-2 px-8 rounded-lg text-black bg-pink-500  my-3" >Create Account</button>
             <div className="text-center text-sm text-grey-dark mt-4">
               By signing up, you agree to the
               <a className="no-underline border-b border-grey-dark text-grey-dark" href="#">
@@ -28,7 +99,6 @@ const Signup = () => {
             </div>
           </div>
           <div className="text-grey-dark mt-6">
-
             Already have an account?
             <Link className="no-underline border-b border-blue font-bold text-black" href="/login"> Login.</Link>
           </div>

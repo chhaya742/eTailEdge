@@ -3,15 +3,21 @@ import "../styles/globals.css";
 import Footer from 'components/Footer'
 import NavBar from 'components/NavBar'
 import { useEffect, useState } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }) {
+  let router=useRouter();
   const [cart, setCart] = useState({})
   const [total, setTotal] = useState(0)
-
+const [user, setUser] = useState({value:null})
+const [key, setKey] = useState(0)
   useEffect(() => {
     console.log("hy this is useeffect from _app.js")
     try {
       if (localStorage.getItem("cart")) {
+        console.log(cart);
         setCart(JSON.parse(localStorage.getItem("cart")))
        
       }
@@ -20,7 +26,12 @@ export default function App({ Component, pageProps }) {
       console.error(error)
       localStorage.clear();
     }
-  }, [])
+    const token = localStorage.getItem("token")
+    if(token){
+      setUser({value:token})
+      setKey(Math.random())
+    }
+  },[router.query])
 
   const saveCart = (myCart) => {
     localStorage.setItem("cart", JSON.stringify(myCart))
@@ -62,10 +73,10 @@ export default function App({ Component, pageProps }) {
     saveCart(myCart)
   }
   return <>
-  <NavBar  cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
+  <NavBar user={user} key={key}  cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
   <Component cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
   <Footer />
-   
+  <ToastContainer position="top-right" autoClose={2000} pauseOnHover={false}/>
   </>
 
 }
