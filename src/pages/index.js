@@ -15,8 +15,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main >
-        <div >
-          <img className="w-full h-screen h-100 w-100" src="/homepag.jpg" alt='codeswear' />
+        <div className='container mx-auto'>
+          <img className="w-full  h-full w-100" src="/banner-img-3.jpg" alt='codeswear' />
         </div>
         <div>
           <section className="text-gray-600 body-font">

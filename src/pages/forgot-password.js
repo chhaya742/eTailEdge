@@ -1,6 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 const ForgotPassword = () => {
+    const router=useRouter();
+    useEffect(() => {
+        if(localStorage.getItem("token")){
+          router.push("/")
+        }
+      }, [])
     return (
         <div>
             <section className="bg-gray-50 dark:bg-gray-900">

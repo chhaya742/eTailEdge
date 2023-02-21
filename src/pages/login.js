@@ -9,7 +9,8 @@ const Login = () => {
   const [error, setError] = useState({ isError: true })
 
   const request = async () => {
-    const data = await axios.post('http://localhost:3000/api/authentication/login', user)
+    console.log(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`);
+    const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`, user)
     // console.log(data.data);
     if (data.data.status) {
   
@@ -24,6 +25,9 @@ const Login = () => {
     }
   }
   useEffect(() => {
+    if(localStorage.getItem("token")){
+      router.push("/")
+    }
     if (!error.isError) {
       request(user);
     }

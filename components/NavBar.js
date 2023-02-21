@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 
-import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai'
+import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle, AiOutlineLogout } from 'react-icons/ai'
 import { BsFillBagCheckFill } from 'react-icons/bs'
-import { MdAccountCircle } from 'react-icons/md'
-const NavBar = ({ user, cart, addToCart, removeCart, clearCart, subtl }) => {
+import { MdAccountCircle, MdManageAccounts, MdHelp } from 'react-icons/md'
+import { FcAbout } from 'react-icons/fc'
+
+const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl }) => {
     const [dropDown, setDropDown] = useState(false)
     const [toggle, settoggle] = useState(false)
 
@@ -18,22 +20,28 @@ const NavBar = ({ user, cart, addToCart, removeCart, clearCart, subtl }) => {
     const handleClick = () => {
         settoggle(false)
     }
+
     return (
         <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
-
             <div className='logo flex items-center' >
                 <div className='mx-2'>
-                {dropDown && <div className='absolute right-9 top-10 bg-pink-400 px-5 py-1 rounded-md'>
-                <ul className=''>
-                    <li className='py-1 hover:text-pink-700 text-sm'>order</li>
-                    <li className='py-1 hover:text-pink-700 text-sm'>myaccount</li>
-                    <li className='py-1 hover:text-pink-700 text-sm'>logout</li>
-                </ul>
-            </div>}
-                    {user.value && <MdAccountCircle onMouseOver={toggleDropDown} onMouseLeave={toggleDropDown} className='absolute right-16 top-4 right-0 text-xl md:text-2xl cursor-pointer' />}
-                   
+                    {dropDown &&
+                        <div onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-9 top-10 shadow-lg bg-pink-200 px-5 py-1 rounded-md w-60 h-60'>
+                            <ul >
+                                <Link href={"/myaccount"}><li className='py-1 hover:text-white  text-lg flex'><MdManageAccounts className='py-1 mx-4 text-3xl' />Myaccount</li></Link>
+
+                                <Link href={"/orders"}><li className='py-1 hover:text-white text-lg flex'><BsFillBagCheckFill className='py-1 mx-4  text-3xl' />Order</li></Link>
+                                <hr />
+                                <Link href={"/about"}><li className='py-1 hover:text-white text-lg flex'><FcAbout className='py-1 mx-4 text-black text-3xl' />About</li></Link>
+
+                                <Link href={"/help"}><li className='py-1 hover:text-white text-lg flex'><MdHelp className='py-1 mx-4  text-3xl' />Help</li></Link>
+
+                            </ul>
+                            <div onClick={logout} className='py-1 absolute bottom-2 hover:text-white text-lg flex' ><AiOutlineLogout className='py-1 mx-1  text-3xl' />logout</div>
+                        </div>}
+                    {user.value && <MdAccountCircle onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-16 top-4 text-xl md:text-2xl cursor-pointer' />}
                     {!user.value && <Link href={"/login"}>
-                        <button className='bg-pink-600 px-1 py-1 rounded-md'>login</button>
+                        <button className='bg-pink-600 px-1 py-1 rounded-md absolute right-16 top-1 text-xl md:text-xl cursor-pointer'>login</button>
                     </Link>}
                 </div>
                 <Link href={"/"} className="mr-1"> <img src="/logo.png" alt="" className="w-40 h-15" /></Link>
@@ -71,7 +79,6 @@ const NavBar = ({ user, cart, addToCart, removeCart, clearCart, subtl }) => {
                     <button onClick={clearCart} className="flex mx-auto px-2 text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm"> Clear Cart</button>
                 </div>
             </div>}
-
         </div>
     )
 }

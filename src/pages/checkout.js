@@ -74,7 +74,7 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
         <div className="total font-bold">Subtotal: ₹{subtl}</div>
       </div>}
       <div className="flex mt-5 px-2 ">
-        <Link href={"/order"}> <button className="flex mx-auto text-white bg-pink-500 border-0 pr-2 py-1 px-3 focus:outline-none hover:bg-pink-600 rounded text-sm m-1">pay ₹{subtl}</button>
+        <Link href={"/"}> <button className="flex mx-auto text-white bg-pink-500 border-0 pr-2 py-1 px-3 focus:outline-none hover:bg-pink-600 rounded text-sm m-1">pay ₹{subtl}</button>
         </Link>
       </div>
     </div>

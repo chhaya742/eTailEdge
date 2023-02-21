@@ -1,10 +1,11 @@
+import "dotenv"
 const options = {
     client: 'mysql',
     connection: {
-        host: 'localhost',
-        user: 'root',
-        password: 'Chhaya@123',
-        database: 'codeswear'
+        host: "localhost",
+        user: "root",
+        password: "Chhaya@123",
+        database: "codeswear"
     }
 }
 

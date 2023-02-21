@@ -3,23 +3,31 @@ import "../styles/globals.css";
 import Footer from 'components/Footer'
 import NavBar from 'components/NavBar'
 import { useEffect, useState } from "react";
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingBar from 'react-top-loading-bar'
 import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }) {
-  let router=useRouter();
+  const [progress, setProgress] = useState(0)
+  let router = useRouter();
   const [cart, setCart] = useState({})
   const [total, setTotal] = useState(0)
-const [user, setUser] = useState({value:null})
-const [key, setKey] = useState(0)
+  const [user, setUser] = useState({ value: null })
+  const [key, setKey] = useState(0)
   useEffect(() => {
     console.log("hy this is useeffect from _app.js")
+    router.events.on('routeChangeStart', ()=>{
+      setProgress(40)
+    })
+    router.events.on('routeChangeComplete', ()=>{
+      setProgress(100)
+    })
     try {
       if (localStorage.getItem("cart")) {
         console.log(cart);
         setCart(JSON.parse(localStorage.getItem("cart")))
-       
+
       }
 
     } catch (error) {
@@ -27,11 +35,11 @@ const [key, setKey] = useState(0)
       localStorage.clear();
     }
     const token = localStorage.getItem("token")
-    if(token){
-      setUser({value:token})
+    if (token) {
+      setUser({ value: token })
       setKey(Math.random())
     }
-  },[router.query])
+  }, [router.query])
 
   const saveCart = (myCart) => {
     localStorage.setItem("cart", JSON.stringify(myCart))
@@ -39,7 +47,7 @@ const [key, setKey] = useState(0)
     const key = Object.keys(myCart)
 
     for (let i = 0; i < key.length; i++) {
-  
+
       subtl += parseInt(myCart[key[i]].price) * parseInt(myCart[key[i]].qyt)
 
     }
@@ -72,11 +80,25 @@ const [key, setKey] = useState(0)
     setCart(myCart)
     saveCart(myCart)
   }
+  const logout = () => {
+    localStorage.removeItem("token")
+    setKey(Math.random());
+    setUser({ value: null })
+    toast.success("You have logged out successfully")
+    router.push("/")
+    // router.reload()
+ 
+  }
   return <>
-  <NavBar user={user} key={key}  cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
-  <Component cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
-  <Footer />
-  <ToastContainer position="top-right" autoClose={2000} pauseOnHover={false}/>
+    <LoadingBar
+      color='#ff2d55'
+      progress={progress}
+      waitingTime={300}
+      onLoaderFinished={() => setProgress(0)}
+    />
+    <NavBar logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
+    <Component cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
+    <Footer />
+    <ToastContainer position="top-right" autoClose={1000} pauseOnHover={false} />
   </>
-
 }

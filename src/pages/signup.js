@@ -10,7 +10,7 @@ const Signup = () => {
   const [error, setError] = useState({ isError: true })
 
   const request = async () => {
-    const data = await axios.post('http://localhost:3000/api/authentication/signup', user)
+    const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/signup`, user)
     console.log(data);
     if (data.data.status) {
     
@@ -23,6 +23,9 @@ const Signup = () => {
     }
   }
   useEffect(() => {
+    if(localStorage.getItem("token")){
+      router.push("/")
+    }
     if (!error.isError) {
       request(user);
     }

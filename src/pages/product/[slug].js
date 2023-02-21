@@ -8,11 +8,11 @@ const Slug = ({ cart, addToCart, removeCart, clearCart, subtl, products, colorSi
 
   const router = useRouter()
   const { slug } = router.query
-  const [pin, setpin] = useState()
-  const [service, setservice] = useState()
+  const [pin, setpin] = useState('')
+  const [service, setservice] = useState('')
 
   const CheckServiceAbility = async () => {
-    let data = await fetch("http://localhost:3000/api/pincode")
+    let data = await fetch(`${process.env.NEXT_PUBLIC_localhost}/api/pincode`)
     data = await data.json();
     if (data.pincode.includes(parseInt(pin))) {
       setservice(true)
@@ -29,7 +29,7 @@ const Slug = ({ cart, addToCart, removeCart, clearCart, subtl, products, colorSi
   const [size, setSize] = useState(products[0].size)
   const refreshVariant = (newSize, newColor) => {
     console.log(newSize, newColor);
-    let url = `http://localhost:3000/product/${colorSizeSlug[newColor][newSize]['slug']}`
+    let url = `${process.env.NEXT_PUBLIC_localhost}/product/${colorSizeSlug[newColor][newSize]['slug']}`
     window.location = url
   }
 
@@ -99,16 +99,26 @@ const Slug = ({ cart, addToCart, removeCart, clearCart, subtl, products, colorSi
                   <div className="flex">
                     <span className="mr-3">Color</span>
                     {Object.keys(colorSizeSlug).includes("red") && Object.keys(colorSizeSlug["red"]).includes(size) && <button onChange={(e) => refreshVariant(color, "red")} className={`border-2  ml-1 bg-red-700 rounded-full w-6 h-6 focus:outline-none ${color == 'red' ? "border-black" : "border-gray-300"}`}></button>}
+
                     {Object.keys(colorSizeSlug).includes("black") && Object.keys(colorSizeSlug["black"]).includes(size) && <button onChange={(e) => refreshVariant(color, "black")} className={`border-2  ml-1 bg-black rounded-full w-6 h-6 focus:outline-none ${color == 'black' ? "border-black" : "border-gray-300"}`}></button>}
-                    {Object.keys(colorSizeSlug).includes("green") && Object.keys(colorSizeSlug["green"]).includes(size) && <button onChange={(e) => refreshVariant(color, "green")} className={`border-2  ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none ${color == 'green' ? "border-black" : "border-gray-300"}`}></button>}
+
+                    {Object.keys(colorSizeSlug).includes("green") && Object.keys(colorSizeSlug["green"]).includes(size) && <button onChange={(e) => refreshVariant(color, "green")} className={`border-2  ml-1 bg-green-300 rounded-full w-6 h-6 focus:outline-none ${color == 'green' ? "border-black" : "border-gray-300"}`}></button>}
+
                     {Object.keys(colorSizeSlug).includes("yellow") && Object.keys(colorSizeSlug["yellow"]).includes(size) && <button onChange={(e) => refreshVariant(color, "yellow")} className={`border-2  ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none ${color == 'red' ? "border-black" : "border-gray-300"}`}></button>}
-                    {Object.keys(colorSizeSlug).includes("blue") && Object.keys(colorSizeSlug["blue"]).includes(size) && <button onChange={(e) => refreshVariant(color, "blue")} className={`border-2  ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none ${color == 'blue' ? "border-black" : "border-gray-300"}`}></button>}
+                    
+                    {Object.keys(colorSizeSlug).includes("blue") && Object.keys(colorSizeSlug["blue"]).includes(size) && <button onChange={(e) => refreshVariant(color, "blue")} className={`border-2  ml-1 bg-blue-900 rounded-full w-6 h-6 focus:outline-none ${color == 'blue' ? "border-black" : "border-gray-300"}`}></button>}
+
                     {Object.keys(colorSizeSlug).includes("gray") && Object.keys(colorSizeSlug["gray"]).includes(size) && <button onChange={(e) => refreshVariant(color, "gray")} className={`border-2  ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none ${color == 'gray' ? "border-black" : "border-gray-300"}`}></button>}
+
+                    {Object.keys(colorSizeSlug).includes("purpel") && Object.keys(colorSizeSlug["purpel"]).includes(size) && <button onChange={(e) => refreshVariant(color, "purpel")} className={`border-2  ml-1 bg-purple-400 rounded-full w-6 h-6 focus:outline-none ${color == 'purpel' ? "border-black" : "border-gray-300"}`}></button>}
+
+                    {Object.keys(colorSizeSlug).includes("orange") && Object.keys(colorSizeSlug["orange"]).includes(size) && <button onChange={(e) => refreshVariant(color, "orange")} className={`border-2  ml-1 bg-orange-400 rounded-full w-6 h-6 focus:outline-none ${color == 'orange' ? "border-black" : "border-gray-300"}`}></button>}
                   </div>
                   <div className="flex ml-6 items-center">
                     <span className="mr-3">Size</span>
                     <div className="relative">
                       <select value={size} onChange={(e) => refreshVariant(e.target.value, color)} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
+                        {Object.keys(colorSizeSlug[color]).includes("XS") && <option value={"XS"}>XS</option>}
                         {Object.keys(colorSizeSlug[color]).includes("S") && <option value={"S"}>S</option>}
                         {Object.keys(colorSizeSlug[color]).includes("SM") && <option value={"SM"}>SM</option>}
                         {Object.keys(colorSizeSlug[color]).includes("L") && <option value={"L"}>L</option>}

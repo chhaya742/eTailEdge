@@ -11,35 +11,46 @@ const Tshirts = ({ products }) => {
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-wrap justify-center">
-          {Object.keys(products).length===0 && <p>{`Sorry all the ${slug} are currently out of stock. New stock comming soon Stay Tuned`} </p>}
+            {Object.keys(products).length === 0 && <p>{`Sorry all the ${slug} are currently out of stock. New stock comming soon Stay Tuned`} </p>}
             {Object.keys(products).map((item) => {
               return <Link key={products[item].id} passHref={true} href={`/product/${products[item].slug}`} legacyBehavior>
                 <div className="lg:w-1/5 md:w-1/2 p-4 w-full shadow-lg m-5">
                   <a className="block relative  rounded overflow-hidden">
-                    <img alt="ecommerce" className="h-[30vh] md:h-[34vh] m-auto " src={products[item].image}/>
+                    <img alt="ecommerce" className="h-[30vh] md:h-[34vh] m-auto " src={products[item].image} />
                   </a>
                   <div className="mt-4 text-left">
                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category}</h3>
                     <h2 className="text-gray-900 title-font text-lg font-medium">{products[item].title}</h2>
                     <p className="mt-1">₹{products[item].price}</p>
-                    <div>
+                    {products[item].category === "stickers" || products[item].category === "mugs" ? <div>
+                      {products[item].size.includes("90") && <span className='border border-gray-600 mx-1 px-1 py-0'>90 CM</span>}
+                      {products[item].size.includes("80") && <span className='border border-gray-600 mx-1 px-1 py-0'>80 CM</span>}
+                      {products[item].size.includes("5") && <span className='border border-gray-600 mx-1 px-1 py-0'>5 CM</span>}
+                      {products[item].size.includes("500") && <span className='border border-gray-600 mx-1 px-1 py-0'>500 CM</span>}
+                      {products[item].size.includes("3") && <span className='border border-gray-600 mx-1 px-1 py-0'>3 CM</span>}
+                      {products[item].size.includes("65") && <span className='border border-gray-600 mx-1 px-1 py-0'>65 CM</span>}
+                    </div> : <div>
                       {products[item].size.includes("XS") && <span className='border border-gray-600 mx-1 px-1 py-0'>XS</span>}
                       {products[item].size.includes("S") && <span className='border border-gray-600 mx-1 px-1 py-0'>S</span>}
                       {products[item].size.includes("M") && <span className='border border-gray-600 mx-1 px-1 py-0'>M</span>}
                       {products[item].size.includes("L") && <span className='border border-gray-600 mx-1 px-1 py-0'>L</span>}
                       {products[item].size.includes("XL") && <span className='border border-gray-600 mx-1 px-1 py-0'>X</span>}
                       {products[item].size.includes("XXL") && <span className='border border-gray-600 mx-1 px-1 py-0'>XL</span>}
-                    </div>
+                    </div>}
 
                     <div>
                       {products[item].color.includes("red") && <button className="border-2 border-gray-300 ml-1 bg-red-700 rounded-full w-6 h-6 focus:outline-none"></button>}
-                      {products[item].color.includes("green") && <button className="border-2 border-gray-300 ml-1 bg-green-900 rounded-full w-6 h-6 focus:outline-none"></button>}
-                      {products[item].color.includes("blue") && <button className="border-2 border-gray-300 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"></button>}
+                      {products[item].color.includes("green") && <button className="border-2 border-gray-300 ml-1 bg-green-300 rounded-full w-6 h-6 focus:outline-none"></button>}
+                      {products[item].color.includes("blue") && <button className="border-2 border-gray-300 ml-1 bg-blue-900 rounded-full w-6 h-6 focus:outline-none"></button>}
                       {products[item].color.includes("black") && <button className="border-2 border-gray-300 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"></button>}
                       {products[item].color.includes("yellow") && <button className="border-2 border-gray-300 ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none"></button>}
                       {products[item].color.includes("gray") && <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>}
+                      {products[item].color.includes("pink") && <button className="border-2 border-gray-300 ml-1 bg-pink-200 rounded-full w-6 h-6 focus:outline-none"></button>}
+                      {products[item].color.includes("purpel") && <button className="border-2 border-gray-300 ml-1  bg-purple-500 rounded-full w-6 h-6 focus:outline-none"></button>}
+                      {products[item].color.includes("orange") && <button className="border-2 border-gray-300 ml-1 bg-orange-500 rounded-full w-6 h-6 focus:outline-none"></button>}
 
                     </div>
+
                   </div>
                 </div>
               </Link>
