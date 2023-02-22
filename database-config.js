@@ -8,7 +8,6 @@ const options = {
         database: "codeswear"
     }
 }
-
 const knex = require('knex')(options);
 
 

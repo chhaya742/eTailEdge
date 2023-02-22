@@ -1,6 +1,8 @@
 import React from 'react'
 import Link from "next/link"
-const Order = () => {
+import knex from '../../database-config'
+const Order = ({ orders ,product}) => {
+  console.log(product,orders);
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden">
@@ -43,5 +45,16 @@ const Order = () => {
     </div>
   )
 }
+
+export async function getServerSideProps(context) {
+  // console.log(localStorage.getItem("user"));
+  let orders = await knex("orders").select("*")
+  
+  const product= await knex("product").select("*").where({id:orders[0].productid})
+
+  return {
+    props: { orders: JSON.stringify(orders),product:JSON.stringify(product) }
+  }
+};
 
 export default Order

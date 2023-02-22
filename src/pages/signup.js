@@ -11,21 +11,21 @@ const Signup = () => {
 
   const request = async () => {
     const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/signup`, user)
-    console.log(data);
     if (data.data.status) {
-    
-      toast.success("You have loged in successfully")
-      setTimeout(() => {
-        router.push("/")
-      }, 1000);
+      localStorage.setItem("token",data.data.data)
+      localStorage.setItem("user",data.data.data[0])
+      toast.success("Your account has created successfully")
+      if(localStorage.getItem("token")){
+        setTimeout(() => {
+          router.push("/")
+        }, 1000);
+      }
     } else {
       toast.error(data.data.message)
     }
   }
+
   useEffect(() => {
-    if(localStorage.getItem("token")){
-      router.push("/")
-    }
     if (!error.isError) {
       request(user);
     }
@@ -63,10 +63,8 @@ const Signup = () => {
   const handleSubmit = () => {
     const error = hamdleError(user);
     setError(error)
-
   }
 
-  console.log(user);
   return (
     <div>
       <div className="bg-grey-lighter min-h-screen flex flex-col">

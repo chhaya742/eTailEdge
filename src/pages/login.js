@@ -9,13 +9,13 @@ const Login = () => {
   const [error, setError] = useState({ isError: true })
 
   const request = async () => {
-    console.log(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`);
     const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`, user)
-    // console.log(data.data);
+  
     if (data.data.status) {
   
       localStorage.setItem("token",data.data.data[0].token)
-      console.log(data.data.status);
+        console.log();
+      localStorage.setItem("user",JSON.stringify({"id":data.data.data[0].id,"email":data.data.data[0].email,"name":data.data.data[0].name}))
       toast.success("You have loged in successfully")
       setTimeout(() => {
         router.push("/")

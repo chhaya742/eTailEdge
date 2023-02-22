@@ -1,17 +1,18 @@
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import knex from '../../database-config'
-const Orders = () => {
-  const router=useRouter();
+
+const Orders = ({ orders ,product}) => {
+
+  const router = useRouter();
   useEffect(() => {
-      if(!localStorage.getItem("token")){
-          router.push("/")
-        }
+    if (!localStorage.getItem("token")) {
+      router.push("/")
+    }
   }, [])
-  
-  return (
+  return ( 
     <div className='container mx-auto'>
-      <h1 className='font-semibold text-2xl p-8 text-center'> Orders</h1>
+      <h1 className='font-semibold text-2xl p-8 text-center'> My Orders</h1>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -105,14 +106,17 @@ const Orders = () => {
   )
 }
 
-
 export async function getServerSideProps(context) {
+  // console.log(localStorage.getItem("user"));
+  let orders = await knex("orders").select("*")
+  
+  const product= await knex("product").select("*").where({id:orders[0].productid})
 
-  let orders = await knex("order").select("*").where({ userid: "" })
-  console.log(orders);
   return {
-    props: { orders }
+    props: { orders: JSON.stringify(orders),product:JSON.stringify(product) }
   }
 };
+
+
 
 export default Orders

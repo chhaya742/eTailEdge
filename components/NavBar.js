@@ -7,12 +7,9 @@ import { MdAccountCircle, MdManageAccounts, MdHelp } from 'react-icons/md'
 import { FcAbout } from 'react-icons/fc'
 
 const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl }) => {
+    // console.log("subtl",subtl);
     const [dropDown, setDropDown] = useState(false)
     const [toggle, settoggle] = useState(false)
-
-    const toggleDropDown = () => {
-        setDropDown(!dropDown)
-    }
 
     const toggleCart = () => {
         settoggle(true)
@@ -58,7 +55,7 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
             <div onClick={toggleCart} className='cart mx-5 absolute top-4 right-0'>
                 <AiOutlineShoppingCart className='text-xl md:text-2xl cursor-pointer' />
             </div>
-            {toggle && <div className={`w-72 h-34 sideCart absolute top-0 right-0 bg-pink-100 px-8 py-10 transform transition-transform`} >
+            {toggle && <div className={`w-72 h-[100vh] sideCart overflow-y-scroll absolute top-0 right-0 bg-pink-100 px-8 py-10 transform transition-transform`} >
                 <h2 className='font-bold text-xl text-center'>Shopping Cart</h2>
                 <span className='absolute top-5 right-2 cursor-pointer text-2xl text-pink-500'><AiFillCloseCircle onClick={handleClick} /></span>
                 <ol className='list-decimal font-semibold' >
@@ -67,7 +64,7 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
                         return <li key={item}>
                             <div className="item flex my-5">
                                 <div className='w-2/3 font-semibold'> {cart[item].name}</div>
-                                <div className='flex font-semibold items-center justify-center w-1/3' ><AiFillMinusCircle onClick={() => removeCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer text-base text-pink-500' /><span className='mx-2 text-sm'>{cart[item].qyt}</span><AiFillPlusCircle onClick={() => addToCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer te xt-base text-pink-500' /></div>
+                                <div className='flex font-semibold items-center justify-center w-1/3' ><AiFillMinusCircle onClick={() => removeCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer text-base text-pink-500' /><span className='mx-2 text-sm'>{cart[item].qyt}</span><AiFillPlusCircle onClick={() => addToCart(item,cart[item].id, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer te xt-base text-pink-500' /></div>
                             </div>
                         </li>
                     })}

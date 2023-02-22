@@ -25,13 +25,12 @@ export default function App({ Component, pageProps }) {
     })
     try {
       if (localStorage.getItem("cart")) {
-        console.log(cart);
         setCart(JSON.parse(localStorage.getItem("cart")))
 
       }
 
     } catch (error) {
-      console.error(error)
+   
       localStorage.clear();
     }
     const token = localStorage.getItem("token")
@@ -51,14 +50,16 @@ export default function App({ Component, pageProps }) {
       subtl += parseInt(myCart[key[i]].price) * parseInt(myCart[key[i]].qyt)
 
     }
+
     setTotal(subtl)
   }
-  const addToCart = (itemCode, qyt, price, size, name, variant) => {
+  const addToCart = (itemCode,id, qyt, price, size, name, variant) => {
     let myCart = cart
     if (itemCode in cart) {
       myCart[itemCode].qyt = myCart[itemCode].qyt + qyt
     } else {
-      myCart[itemCode] = { qyt: 1, price, size, name, variant }
+      myCart[itemCode] = {id, qyt: 1, price, size, name, variant }
+      toast("Product add to your cart")
     }
 
     setCart(myCart)
@@ -82,6 +83,7 @@ export default function App({ Component, pageProps }) {
   }
   const logout = () => {
     localStorage.removeItem("token")
+    localStorage.removeItem("user")
     setKey(Math.random());
     setUser({ value: null })
     toast.success("You have logged out successfully")
@@ -89,6 +91,15 @@ export default function App({ Component, pageProps }) {
     // router.reload()
  
   }
+
+  const buyNow = (itemCode, qyt,id, price, size, name, variant ) => {
+    let myCart ={itemCode:{ qyt: 1,id, price, size, name, variant }}
+    setCart(myCart)
+    saveCart(myCart)
+    router.push("/checkout")
+
+  }
+  console.log(total);
   return <>
     <LoadingBar
       color='#ff2d55'
@@ -96,9 +107,9 @@ export default function App({ Component, pageProps }) {
       waitingTime={300}
       onLoaderFinished={() => setProgress(0)}
     />
-    <NavBar logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
-    <Component cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
+    <NavBar logout={logout} buyNow={buyNow} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
+    <Component cart={cart} addToCart={addToCart}  buyNow={buyNow} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
     <Footer />
-    <ToastContainer position="top-right" autoClose={1000} pauseOnHover={false} />
+    <ToastContainer position="top-center" autoClose={1000} pauseOnHover={false} />
   </>
 }

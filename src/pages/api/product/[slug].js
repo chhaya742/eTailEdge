@@ -8,7 +8,7 @@ export default async function handler(req, res) {
             for (let item of data) {
 
                 if (item.title in tshirts) {
-                    console.log(item.title);
+                  
                     if (!tshirts[item.title].color.includes(item.color) && item.availableqyt > 0) {
                         tshirts[item.title].color.push(item.color)
                     }
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
             }
             res.status(200).json({ status: true, message: "product list", data: data })
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         }
     }
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
             const data = await knex("product").update(inputData).where({ "id": id })
             res.status(200).json({ status: true, message: "product update successfully ", data: data })
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         }
     }

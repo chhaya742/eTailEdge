@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import knex from '../../../database-config'
-import axios from 'axios'
+
 import Link from 'next/link'
 import { toast } from 'react-toastify'
-const Slug = ({ cart, addToCart, removeCart, clearCart, subtl, products, colorSizeSlug }) => {
+const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeSlug }) => {
 
   const router = useRouter()
   const { slug } = router.query
   const [pin, setpin] = useState('')
-  const [service, setservice] = useState('')
+  const [service, setservice] = useState()
 
   const CheckServiceAbility = async () => {
     let data = await fetch(`${process.env.NEXT_PUBLIC_localhost}/api/pincode`)
@@ -28,23 +28,23 @@ const Slug = ({ cart, addToCart, removeCart, clearCart, subtl, products, colorSi
   const [color, setColor] = useState(products[0].color)
   const [size, setSize] = useState(products[0].size)
   const refreshVariant = (newSize, newColor) => {
-    console.log(newSize, newColor);
+   
     let url = `${process.env.NEXT_PUBLIC_localhost}/product/${colorSizeSlug[newColor][newSize]['slug']}`
     window.location = url
   }
 
-  const buyNow = (e, slug, price, size, title, color) => {
-    e.preventDefault();
-    clearCart()
-    console.log(title);
-    console.log("chhaya");
-    setTimeout(() => {
-      addToCart(slug, 1, price, size, title, color)
-      router.push("/checkout")
-    }, 1000);
+  // const buyNow = (e, slug, price, size, title, color) => {
+  //   e.preventDefault();
+  //   clearCart()
+   
+  
+  //   setTimeout(() => {
+  //     addToCart(slug, 1, price, size, title, color)
+  //     router.push("/checkout")
+  //   }, 1000);
 
 
-  }
+  // }
 
   return (
     <>
@@ -136,8 +136,8 @@ const Slug = ({ cart, addToCart, removeCart, clearCart, subtl, products, colorSi
                 </div >
                 <div className="flex">
                   <span className="title-font font-medium text-2xl text-gray-900">₹{products[item].price}</span>
-                  <button onClick={(e) => buyNow(e, products[item].slug, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} value="buyNow" className="flex ml-8  text-white bg-pink-500 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Buy Now</button>
-                  <button onClick={() => addToCart(products[item].slug, 1, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} className="flex ml-4  text-white bg-pink-500 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Add To Cart</button>
+                  <button onClick={(e) => buyNow(products[item].slug, 1, products[item].id, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} value="buyNow" className="flex ml-8  text-white bg-pink-500 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Buy Now</button>
+                  <button onClick={() => addToCart(products[item].slug,products[item].id, 1, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} className="flex ml-4  text-white bg-pink-500 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Add To Cart</button>
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                     <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                       <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
@@ -179,7 +179,7 @@ export async function getServerSideProps(context) {
   // console.log(context.query.slug)
   let products = await knex("product").select("*").where({ slug: context.query.slug })
   products = Object.values(JSON.parse(JSON.stringify(products)));
-  console.log(products[0])
+
   let variant = await knex("product").select("*").where({ title: products[0].title, category: products[0].category })
   variant = Object.values(JSON.parse(JSON.stringify(variant)));
   // console.log(variant)
