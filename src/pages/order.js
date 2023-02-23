@@ -1,8 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from "next/link"
-import knex from '../../database-config'
+// import knex from '../../database-config'
+// var jwt = require('jsonwebtoken');
+
 const Order = ({ orders ,product}) => {
-  console.log(product,orders);
+  // console.log(product,orders);
+  // const request=async(orderid)=>{
+  //   const order= await knex("order").select("*").where({id:orderid})
+  //   console.log(order);
+  // }
+  // useEffect(() => {
+  //   const token=localStorage.getItem("token")
+  //   const data=jwt.verify(token,process.env.jsonwebtoken)
+  //   request(data)
+  // }, [])
+  
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden">
@@ -46,15 +58,14 @@ const Order = ({ orders ,product}) => {
   )
 }
 
-export async function getServerSideProps(context) {
-  // console.log(localStorage.getItem("user"));
-  let orders = await knex("orders").select("*")
+// export async function getServerSideProps(context) {
+//   // console.log(localStorage.getItem("user"));
+//   let orders = await knex("orders").select("*")
   
-  const product= await knex("product").select("*").where({id:orders[0].productid})
 
-  return {
-    props: { orders: JSON.stringify(orders),product:JSON.stringify(product) }
-  }
-};
+//   return {
+//     props: { orders: JSON.stringify(orders),product:JSON.stringify(product) }
+//   }
+// };
 
 export default Order

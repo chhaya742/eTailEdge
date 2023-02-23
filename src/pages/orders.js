@@ -1,16 +1,20 @@
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import knex from '../../database-config'
 
-const Orders = ({ orders ,product}) => {
-
+const Orders = ({ orders, product }) => {
+  // console.log(orders);
+  const [token, setToken] = useState('')
   const router = useRouter();
+
   useEffect(() => {
+    setToken(localStorage.getItem("token"))
     if (!localStorage.getItem("token")) {
       router.push("/")
     }
-  }, [])
-  return ( 
+  }, []);
+  
+  return (
     <div className='container mx-auto'>
       <h1 className='font-semibold text-2xl p-8 text-center'> My Orders</h1>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -107,13 +111,17 @@ const Orders = ({ orders ,product}) => {
 }
 
 export async function getServerSideProps(context) {
-  // console.log(localStorage.getItem("user"));
-  let orders = await knex("orders").select("*")
-  
-  const product= await knex("product").select("*").where({id:orders[0].productid})
+  let orders
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem("token")
+    // console.log(localStorage.getItem("token"));
+    const data = jsonwebtoken.verify(token, process.env.jwtprivateKey);
+    orders = await knex("orders").select("*").where({ email: data.email })
+    // console.log(orders);
+  }
 
   return {
-    props: { orders: JSON.stringify(orders),product:JSON.stringify(product) }
+    props: {}
   }
 };
 

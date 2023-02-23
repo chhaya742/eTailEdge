@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         try {
             let data = await knex("user").insert({ name, email, password: newPassword })
             const user = await knex("user").select("*").where({ id: data[0] });
-            var token = jwt.sign({ password: user[0].password }, process.env.jwtprivateKey, { expiresIn: "1h" })
+            var token = jwt.sign({ email: user[0].email }, process.env.jwtprivateKey, { expiresIn: "1h" })
             res.status(200).json({ status: true, message: "add user successfully", data: token })
         } catch (error) {
             console.log(error);
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
             if (data.length > 0) {
                 const decryptedData = bcrypt.compareSync(req.body.password, data[0].password)
                 if (decryptedData) {
-                    var token = jwt.sign({ password: data[0].password }, process.env.jwtprivateKey, { expiresIn: "1h" })
+                    var token = jwt.sign({ email: data[0].email }, process.env.jwtprivateKey, { expiresIn: "1h" })
                     data[0]["token"] = token
                     res.status(200).json({ status: true, message: "user login successfully", data: data })
                 } else {

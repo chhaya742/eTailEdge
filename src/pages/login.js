@@ -10,22 +10,22 @@ const Login = () => {
 
   const request = async () => {
     const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`, user)
-  
+
     if (data.data.status) {
-  
-      localStorage.setItem("token",data.data.data[0].token)
-        console.log();
-      localStorage.setItem("user",JSON.stringify({"id":data.data.data[0].id,"email":data.data.data[0].email,"name":data.data.data[0].name}))
+
+      localStorage.setItem("token", data.data.data[0].token)
+      console.log();
+      localStorage.setItem("user", JSON.stringify({ "id": data.data.data[0].id, "email": data.data.data[0].email, "name": data.data.data[0].name }))
       toast.success("You have loged in successfully")
       setTimeout(() => {
         router.push("/")
       }, 1000);
     } else {
-      toast.error(data.data.message) 
+      toast.error(data.data.message)
     }
   }
   useEffect(() => {
-    if(localStorage.getItem("token")){
+    if (localStorage.getItem("token")) {
       router.push("/")
     }
     if (!error.isError) {

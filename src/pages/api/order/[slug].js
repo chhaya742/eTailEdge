@@ -1,11 +1,10 @@
 import knex from '../../../../database-config'
-var jwt = require('jsonwebtoken');
+var jsonwebtoken = require('jsonwebtoken');
 
 const saltRounds = 10;
 export default async function handler(req, res) {
     const slug = req.query.slug
     if (slug == "order") {
-     
         const address = {
             userid: req.body.userid,
             address: req.body.address,
@@ -13,6 +12,7 @@ export default async function handler(req, res) {
             city: req.body.city,
             pin: req.body.pin
         }
+        console.log(req.body.productid);
         const order = {
             userid: req.body.userid,
             productid: req.body.productid,
@@ -28,5 +28,12 @@ export default async function handler(req, res) {
             console.log(error);
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         }
+    }
+    if (slug == "get-order") {
+       const token=req.body.token
+       console.log(token);
+       const data=jsonwebtoken.verify(token,process.env.jwtprivateKey)
+       console.log(data);
+       
     }
 }

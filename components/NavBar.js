@@ -71,7 +71,8 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
                 </ol>
                 <div className="total font-bold">Subtotal: ₹{subtl}</div>
                 <div className="flex mt-5 ">
-                    <Link href={"/checkout"}> <button className="flex mx-auto  text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm"> <BsFillBagCheckFill className='m-1' />checkout</button></Link>
+              
+                    <Link href= {localStorage.getItem("token")?"/checkout":"/login"}> <button disabled={subtl>0?false:true} className="flex mx-auto  text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm disabled:bg-pink-300"> <BsFillBagCheckFill className='m-1' />checkout</button></Link>
 
                     <button onClick={clearCart} className="flex mx-auto px-2 text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm"> Clear Cart</button>
                 </div>

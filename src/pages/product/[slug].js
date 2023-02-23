@@ -14,7 +14,8 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
   const CheckServiceAbility = async () => {
     let data = await fetch(`${process.env.NEXT_PUBLIC_localhost}/api/pincode`)
     data = await data.json();
-    if (data.pincode.includes(parseInt(pin))) {
+
+    if (Object.keys(data).includes((pin))) {
       setservice(true)
       toast.success(" Yeh ! This pin code is serviceable .");
     } else {

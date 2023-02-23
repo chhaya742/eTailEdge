@@ -15,8 +15,9 @@ export default function App({ Component, pageProps }) {
   const [total, setTotal] = useState(0)
   const [user, setUser] = useState({ value: null })
   const [key, setKey] = useState(0)
+
   useEffect(() => {
-    console.log("hy this is useeffect from _app.js")
+    // console.log("hy this is useeffect from _app.js")
     router.events.on('routeChangeStart', ()=>{
       setProgress(40)
     })
@@ -25,12 +26,10 @@ export default function App({ Component, pageProps }) {
     })
     try {
       if (localStorage.getItem("cart")) {
+        saveCart(JSON.parse(localStorage.getItem("cart")))
         setCart(JSON.parse(localStorage.getItem("cart")))
-
       }
-
     } catch (error) {
-   
       localStorage.clear();
     }
     const token = localStorage.getItem("token")
@@ -99,7 +98,7 @@ export default function App({ Component, pageProps }) {
     router.push("/checkout")
 
   }
-  console.log(total);
+  // console.log(total);
   return <>
     <LoadingBar
       color='#ff2d55'
@@ -108,7 +107,7 @@ export default function App({ Component, pageProps }) {
       onLoaderFinished={() => setProgress(0)}
     />
     <NavBar logout={logout} buyNow={buyNow} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
-    <Component cart={cart} addToCart={addToCart}  buyNow={buyNow} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
+    <Component cart={cart}  addToCart={addToCart}  buyNow={buyNow} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
     <Footer />
     <ToastContainer position="top-center" autoClose={1000} pauseOnHover={false} />
   </>
