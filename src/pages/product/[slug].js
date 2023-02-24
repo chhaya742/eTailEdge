@@ -50,7 +50,6 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
   return (
     <>
       {Object.keys(products).map((item) => {
-        // console.log(products[item].size);
         return <section key={products[item].id} className="text-gray-600 body-font overflow-hidden">
           <div className="container px-5 py-16 mx-auto">
             <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -177,13 +176,11 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
 
 
 export async function getServerSideProps(context) {
-  // console.log(context.query.slug)
   let products = await knex("product").select("*").where({ slug: context.query.slug })
   products = Object.values(JSON.parse(JSON.stringify(products)));
 
   let variant = await knex("product").select("*").where({ title: products[0].title, category: products[0].category })
   variant = Object.values(JSON.parse(JSON.stringify(variant)));
-  // console.log(variant)
   let colorSizeSlug = {}
   for (let item of variant) {
     if (Object.keys(colorSizeSlug).includes(item.color)) {
@@ -193,7 +190,6 @@ export async function getServerSideProps(context) {
       colorSizeSlug[item.color][item.size] = { slug: item.slug }
 
     }
-    // console.log(item)
   }
   return {
     props: { products, colorSizeSlug }

@@ -92,13 +92,14 @@ export default function App({ Component, pageProps }) {
   }
 
   const buyNow = (itemCode, qyt,id, price, size, name, variant ) => {
-    let myCart ={itemCode:{ qyt: 1,id, price, size, name, variant }}
+    let myCart={}
+     myCart[itemCode]={ qyt: 1,id, price, size, name, variant }
     setCart(myCart)
     saveCart(myCart)
     router.push("/checkout")
 
   }
-  // console.log(total);
+  
   return <>
     <LoadingBar
       color='#ff2d55'

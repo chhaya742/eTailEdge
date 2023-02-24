@@ -1,24 +1,34 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import knex from '../../database-config'
+const knex = require('../../database-config')
+import axios from 'axios'
+import Link from "next/link"
 
-const Orders = ({ orders, product }) => {
-  // console.log(orders);
+const Orders = () => {
   const [token, setToken] = useState('')
   const router = useRouter();
 
+  const [orders, setOrders] = useState([])
+  const [product, setProduct] = useState([])
+  const request = async (token) => {
+    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/get-order`, { token: token })
+    setOrders(data.data.orders);
+    setProduct(data.data.products);
+  }
   useEffect(() => {
     setToken(localStorage.getItem("token"))
     if (!localStorage.getItem("token")) {
       router.push("/")
+    } else {
+      request(localStorage.getItem("token"))
     }
   }, []);
-  
   return (
-    <div className='container mx-auto'>
+    <div className='container mx-auto min-h-screen '>
       <h1 className='font-semibold text-2xl p-8 text-center'> My Orders</h1>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -37,91 +47,58 @@ const Orders = ({ orders, product }) => {
                 Price
               </th>
               <th scope="col" className="px-6 py-3">
-                <span className="sr-only">Edit</span>
+              Details
+               { /*<span className="sr-only">Details</span>*/}
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="px-6 py-4">
-                1
-              </td>
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Apple MacBook Pro 17
-              </th>
-              <td className="px-6 py-4">
-                Silver
-              </td>
-              <td className="px-6 py-4">
-                Laptop
-              </td>
-              <td className="px-6 py-4">
-                $2999
-              </td>
-              <td className="px-6 py-4 text-right">
-                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-              </td>
-            </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="px-6 py-4">
-                2
-              </td>
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Microsoft Surface Pro
-              </th>
-              <td className="px-6 py-4">
-                White
-              </td>
-              <td className="px-6 py-4">
-                Laptop PC
-              </td>
-              <td className="px-6 py-4">
-                $1999
-              </td>
-              <td className="px-6 py-4 text-right">
-                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-              </td>
-            </tr>
-            <tr className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="px-6 py-4">
-                3
-              </td>
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Magic Mouse 2
-              </th>
-              <td className="px-6 py-4">
-                Black
-              </td>
-              <td className="px-6 py-4">
-                Accessories
-              </td>
-              <td className="px-6 py-4">
-                $99
-              </td>
-              <td className="px-6 py-4 text-right">
-                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-              </td>
-            </tr>
-          </tbody>
+          {
+            orders.map((item, index) => {
+              return product[index] != undefined ?
+                <tbody  key={item.id}>
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td className="px-6 py-4">
+                      {index + 1}
+                    </td>
+                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {product[index].title}
+                    </th>
+                    <td className="px-6 py-4">
+                      {product[index].color}
+                    </td>
+                    <td className="px-6 py-4">
+                      {product[index].category}
+                    </td>
+                    <td className="px-6 py-4">
+                      ${product[index].price}
+                    </td>
+                    <td className="px-6 py-4">
+                      <Link href={`/order?id=${item.orderId}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">view</Link>
+                    </td>
+                 {  /* <td className="px-6 py-4 text-right">
+                      <Link href={`/order?id=${item.orderId}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">view</Link>
+            </td>*/}
+                  </tr>
+                </tbody>
+                : ""
+            })}
         </table>
-      </div>
 
+      </div>
     </div>
   )
 }
 
 export async function getServerSideProps(context) {
-  let orders
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem("token")
-    // console.log(localStorage.getItem("token"));
-    const data = jsonwebtoken.verify(token, process.env.jwtprivateKey);
-    orders = await knex("orders").select("*").where({ email: data.email })
-    // console.log(orders);
+  let products = [];
+  let orders = await knex("orders").select("*")
+  orders = JSON.parse(JSON.stringify(orders))
+  for (let i of orders) {
+    const product = await knex("product").select("*").where({ id: i.productid })
+    products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
   }
-
   return {
-    props: {}
+    props: { orders: orders, product: products }
   }
 };
 

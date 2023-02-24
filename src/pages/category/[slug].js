@@ -90,7 +90,6 @@ export async function getServerSideProps(context) {
       }
     }
   }
-  // console.log(tshirts);
   return {
     props: { products }
   }

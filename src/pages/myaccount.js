@@ -10,7 +10,7 @@ const MyAccount = () => {
     }, [])
     
   return (
-    <div>MyAccount</div>
+    <div className='min-h-screen'>MyAccount</div>
   )
 }
 

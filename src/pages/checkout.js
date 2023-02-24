@@ -4,12 +4,10 @@ import axios from 'axios';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-
+import jwt from 'jsonwebtoken';
 const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
-  // console.log("subtl",subtl);
   const [id, setId] = useState(1)
   const router = useRouter()
-  // console.log(Object.values(cart).length!==0?Object.values(cart)[0].id:"");
   const [userid, setUserid] = useState(id)
   const [name, setname] = useState("")
   const [email, setemail] = useState("")
@@ -19,19 +17,24 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
   const [city, setcity] = useState("")
   const [pin, setpin] = useState("")
   let pId = (Object.values(cart).length !== 0 ? Object.values(cart)[0].id : "");
-  const [userDetails, setUserDetails] = useState({ userid: id, name: name, email: email, address: address, phone: phone, state: state, city: city, pin: pin, productid: pId, amount: subtl })
+
+  const [userDetails, setUserDetails] = useState({ userid: "", name: name, email: email, address: address, phone: phone, state: state, city: city, pin: pin, productid: "", amount: "" })
   const [error, setError] = useState({ isError: true })
   const [pay, setPay] = useState(true)
 
 
-  const request = async () => {
-    console.log(userDetails);
-    const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, userDetails)
-    if (data.data.status) {
+  const request = async (userDetails) => {
+    const token = localStorage.getItem('token');
+    var decodedToken = jwt.decode(token, { complete: true });
+    userDetails.userid=parseInt(decodedToken.payload.user.id)
+    userDetails.productid=pId
+    userDetails.amount=subtl
+    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, userDetails)
+    if (data.status) {
       toast.success(data.data.message)
       if (localStorage.getItem("token")) {
         setTimeout(() => {
-          router.push("/order")
+          router.push(`/order?id=${data.data[0].orderId}`)
         }, 1000);
       }
     } else {
@@ -41,13 +44,8 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
 
   useEffect(() => {
     if (!error.isError) {
-      if(cart.length>0){
-        setPay(false)
-        console.log(userDetails.productid);
-        request(userDetails);
-      }else{
-        toast("please select a product")
-      }
+      setPay(false)
+      request(userDetails);
     }
   }, [error])
 
@@ -73,9 +71,7 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
       if (e.value.length == 6) {
         let data = await fetch(`${process.env.NEXT_PUBLIC_localhost}/api/pincode`)
         data = await data.json();
-        // console.log(Object.keys(data).includes((e.value)));
         if (Object.keys(data).includes((e.value))) {
-          // console.log(data[e.value][1]);
           setstate(data[e.value][1])
           setcity(data[e.value][0])
         } else {
@@ -87,17 +83,11 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
         setstate('')
         setcity('')
       }
-
-      // console.log(userDetails.pin);
-      // console.log(Object.keys(data).includes((e.value)));
-
     }
 
   }
   const hamdleError = (userDetails) => {
-    // console.log(userDetails);
     const { name, email, address, phone, state, city, pin } = userDetails
-    // console.log(state);
     const error = {};
     let isError = false;
     if (!name) {
@@ -146,11 +136,11 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
     const error = hamdleError(userDetails);
     setError(error)
   }
-console.log(Object.keys(cart).length);
+
   return (
     <div className='container px-2 mx-auto '>
-      <h1 className='font-bold text-xl my-8 text-center'>Checkout</h1>
-      <h2 className='font-semibold text-xl'>1. Delivery Details</h2>
+      <h1 className='font- text-xl my-8 text-center'>Checkout</h1>
+      <h2 className='font-semi text-xl'>1. Delivery Details</h2>
       <div className="mx-auto flex my-1 md:my-4">
         <div className="px-2 w-1/2">
           <div className=" mb-4">
@@ -207,9 +197,9 @@ console.log(Object.keys(cart).length);
           </div>
         </div>
       </div>
-      <h2 className='font-semibold text-xl'>2. Review Cart Item</h2>
+      <h2 className='font-semi text-xl'>2. Review Cart Item</h2>
       {<div className=" sideCart  bg-pink-100 p-6 m-2" >
-        <ol className='list-decimal font-semibold' >
+        <ol className='list-decimal font-semi' >
           {Object.keys(cart).length == 0 && <div className='my-4 font-semibold'> Your cart is empty !</div>}
           {Object.keys(cart).map((item) => {
             return <li key={item}>
@@ -224,9 +214,9 @@ console.log(Object.keys(cart).length);
         <div className="total font-bold">Subtotal: ₹{subtl}</div>
       </div>}
       <div className="flex mt-5 px-2 absolute ">
-      <button disabled={Object.keys(cart).length>0?false:true} onClick={handleSubmit} className="flex mx-auto disabled:bg-pink-300 text-white bg-pink-500 border-0 pr-2 py-1 px-3 focus:outline-none hover:bg-pink-600 rounded text-sm m-1">pay ₹{subtl}</button>
+        <button disabled={Object.keys(cart).length > 0 ? false : true} onClick={handleSubmit} className="flex mx-auto disabled:bg-pink-300 text-white bg-pink-500 border-0 pr-2 py-1 px-3 focus:outline-none hover:bg-pink-600 rounded text-sm m-1">pay ₹{subtl}</button>
       </div>
-      {Object.keys(cart).length>0?"":<div className='text-red-500 underline mx-2'><Link href={"/category/tshirts"}>please select a product</Link></div>}
+      {Object.keys(cart).length > 0 ? "" : <div className='text-red-500 underline mx-2'><Link href={"/category/tshirts"}>please add product in cart</Link></div>}
     </div>
   )
 }
