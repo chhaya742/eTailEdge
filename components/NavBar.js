@@ -1,23 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle, AiOutlineLogout } from 'react-icons/ai'
 import { BsFillBagCheckFill } from 'react-icons/bs'
 import { MdAccountCircle, MdManageAccounts, MdHelp } from 'react-icons/md'
 import { FcAbout } from 'react-icons/fc'
-
+import jwt from "jsonwebtoken"
 const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl }) => {
-    // console.log("subtl",subtl);
     const [dropDown, setDropDown] = useState(false)
     const [toggle, settoggle] = useState(false)
-
+const [name, setName] = useState('')
     const toggleCart = () => {
         settoggle(true)
     }
     const handleClick = () => {
         settoggle(false)
     }
-
+    useEffect(() => {
+        if(localStorage.getItem("token")){
+            setName(jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.name)
+        }
+    }, [])
+    
     return (
         <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
             <div className='logo flex items-center' >
@@ -25,9 +29,9 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
                     {dropDown &&
                         <div onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-9 top-10 shadow-lg bg-pink-200 px-5 py-1 rounded-md w-60 h-60'>
                             <ul >
-                                <Link href={"/myaccount"}><li className='py-1 hover:text-white  text-lg flex'><MdManageAccounts className='py-1 mx-4 text-3xl' />Myaccount</li></Link>
+                                <Link href={"/myaccount"}><li className='py-1 hover:text-white  text-base flex '><MdManageAccounts className='py-1 mx-4 text-3xl' /><span className='font-semibold underline'> {name}</span></li></Link>
 
-                                <Link href={"/orders"}><li className='py-1 hover:text-white text-lg flex'><BsFillBagCheckFill className='py-1 mx-4  text-3xl' />Order</li></Link>
+                                <Link href={"/orders"}><li className='py-1 hover:text-white text-lg flex'><BsFillBagCheckFill className='py-1 mx-4  text-3xl' />Orders</li></Link>
                                 <hr />
                                 <Link href={"/about"}><li className='py-1 hover:text-white text-lg flex'><FcAbout className='py-1 mx-4 text-black text-3xl' />About</li></Link>
 
@@ -59,22 +63,23 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
                 <h2 className='font-bold text-xl text-center'>Shopping Cart</h2>
                 <span className='absolute top-5 right-2 cursor-pointer text-2xl text-pink-500'><AiFillCloseCircle onClick={handleClick} /></span>
                 <ol className='list-decimal font-semibold' >
+                
                     {Object.keys(cart).length == 0 && <div className='my-4 font-semibold'> Your cart is empty !</div>}
                     {Object.keys(cart).map((item) => {
                         return <li key={item}>
                             <div className="item flex my-5">
                                 <div className='w-2/3 font-semibold'> {cart[item].name}</div>
-                                <div className='flex font-semibold items-center justify-center w-1/3' ><AiFillMinusCircle onClick={() => removeCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer text-base text-pink-500' /><span className='mx-2 text-sm'>{cart[item].qyt}</span><AiFillPlusCircle onClick={() => addToCart(item,cart[item].id, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer te xt-base text-pink-500' /></div>
+                                <div className='flex font-semibold items-center justify-center w-1/3' ><AiFillMinusCircle onClick={() => removeCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer text-base text-pink-500' /><span className='mx-2 text-sm'>{cart[item].qyt}</span><AiFillPlusCircle onClick={() => addToCart(item, cart[item].id, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer te xt-base text-pink-500' /></div>
                             </div>
                         </li>
                     })}
                 </ol>
                 <div className="total font-bold">Subtotal: ₹{subtl}</div>
                 <div className="flex mt-5 ">
-              
-                    <Link href= {localStorage.getItem("token")?"/checkout":"/login"}> <button disabled={subtl>0?false:true} className="flex mx-auto  text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm disabled:bg-pink-300"> <BsFillBagCheckFill className='m-1' />checkout</button></Link>
 
-                    <button onClick={clearCart} className="flex mx-auto px-2 text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm"> Clear Cart</button>
+                    <Link href={localStorage.getItem("token") ? "/checkout" : "/login"}> <button disabled={subtl > 0 ? false : true} className="flex mx-auto  text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm disabled:bg-pink-300"> <BsFillBagCheckFill className='m-1' />checkout</button></Link>
+
+                    <button disabled={subtl > 0 ? false : true} onClick={clearCart} className="flex mx-auto px-2 text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm disabled:bg-pink-300"> Clear Cart</button>
                 </div>
             </div>}
         </div>
