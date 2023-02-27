@@ -26,15 +26,16 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
   const request = async (userDetails) => {
     const token = localStorage.getItem('token');
     var decodedToken = jwt.decode(token, { complete: true });
-    userDetails.userid=parseInt(decodedToken.payload.user.id)
-    userDetails.productid=pId
-    userDetails.amount=subtl
-    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, userDetails)
+    userDetails.userid = parseInt(decodedToken.payload.user.id)
+    userDetails.productid = pId
+    userDetails.amount = subtl
+    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, userDetails)
     if (data.status) {
       toast.success(data.data.message)
       if (localStorage.getItem("token")) {
         setTimeout(() => {
-          router.push(`/order?id=${data.data[0].orderId}`)
+          // router.push(`/order?id=${data.data[0].orderId}`)
+          router.push(`/orders`)
         }, 1000);
       }
     } else {

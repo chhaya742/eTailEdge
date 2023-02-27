@@ -23,6 +23,7 @@ const Orders = () => {
       request(localStorage.getItem("token"))
     }
   }, []);
+  // console.log(orders.length);
   return (
     <div className='container mx-auto min-h-screen '>
       <h1 className='font-semibold text-2xl p-8 text-center'> My Orders</h1>
@@ -52,7 +53,7 @@ const Orders = () => {
               </th>
             </tr>
           </thead>
-          {
+          {orders!=undefined && orders.length>0&& 
             orders.map((item, index) => {
               return product[index] != undefined ?
                 <tbody  key={item.id}>
@@ -81,7 +82,8 @@ const Orders = () => {
                   </tr>
                 </tbody>
                 : ""
-            })}
+            })
+          }
         </table>
 
       </div>

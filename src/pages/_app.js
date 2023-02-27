@@ -92,8 +92,18 @@ export default function App({ Component, pageProps }) {
   }
 
   const buyNow = (itemCode, qyt,id, price, size, name, variant ) => {
-    let myCart={}
-     myCart[itemCode]={ qyt: 1,id, price, size, name, variant }
+    // let myCart={}
+    //  myCart[itemCode]={ qyt: 1,id, price, size, name, variant }
+    // setCart(myCart)
+    // saveCart(myCart)
+    let myCart = cart
+    if (itemCode in cart) {
+      myCart[itemCode].qyt = myCart[itemCode].qyt + qyt
+    } else {
+      myCart[itemCode] = {id, qyt: 1, price, size, name, variant }
+      toast("Product add to your cart")
+    }
+
     setCart(myCart)
     saveCart(myCart)
     router.push("/checkout")

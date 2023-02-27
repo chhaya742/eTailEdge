@@ -1,5 +1,5 @@
 import knex from '../../../../database-config'
-
+import {auth} from '../auth'
 import { v4 as uuidv4 } from 'uuid';
 var jwt = require('jsonwebtoken');
 const saltRounds = 10;
@@ -34,6 +34,7 @@ export default async function handler(req, res) {
         }
     }
     if (slug == "get-order") {
+        console.log(auth);
         let products = [];
         try {
             const data = jwt.verify(req.body.token, process.env.NEXT_PUBLIC_jwtprivateKey)
