@@ -13,7 +13,7 @@ const Tshirts = ({ products, addToCart }) => {
           <div className="flex flex-wrap justify-center">
             {Object.keys(products).length === 0 && <p>{`Sorry all the ${slug} are currently out of stock. New stock comming soon Stay Tuned`} </p>}
             {Object.keys(products).map((item) => {
-              return <div key={products[item].id} className="lg:w-1/5 md:w-1/2 p-4 w-full shadow-lg m-5">
+              return <div key={products[item].id} className="lg:w-1/5 md:w-1/2 p-4 w-full shadow-sm m-5">
                 <Link passHref={true} href={`/product/${products[item].slug}`} legacyBehavior>
                   <a className="block relative  rounded overflow-hidden">
                     <img alt="ecommerce" className="h-[30vh] md:h-[34vh] m-auto " src={products[item].image} />

@@ -12,7 +12,7 @@ const Signup = () => {
   const request = async () => {
     const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/signup`, user)
     if (data.status) {
-      console.log(data.data);
+      // console.log(data.data);
       localStorage.setItem("token",data.data.token)
       localStorage.setItem("user",JSON.stringify(data.data))
       toast.success("Your account has created successfully")
@@ -57,7 +57,7 @@ const Signup = () => {
       error.password = "password is requiered";
       isError = true;
     }else{
-      console.log(password.match(passvalid));
+      // console.log(password.match(passvalid));
       if(!password.match(passvalid)){
         error.password =  <p className='text-sm text-green-600 py-2'>Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character should be in passwod:</p>;
         isError = true;

@@ -4,7 +4,7 @@ import knex from '../../database-config'
 // var jwt = require('jsonwebtoken');
 
 const Order = ({ orders ,product,subtl}) => {
-  console.log(orders.id);
+  // console.log("subtl",subtl);
   // const request=async(orderid)=>{
   //   const order= await knex("order").select("*").where({id:orderid})
   //   console.log(order);
@@ -35,7 +35,7 @@ const Order = ({ orders ,product,subtl}) => {
                 <span className="mx-auto text-gray-900">1</span>
               </div>
               <div className=" my-4 py-8">
-                <span className="title-font font-medium text-2xl text-gray-900 ">SubTotal:  ₹{subtl}</span>
+                <span className="title-font font-medium text-2xl text-gray-900 ">SubTotal:  ₹{product.price}</span>
                 <Link href={"/track-order"}>   <button className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none hover:bg-pink-600 rounded">Track Order</button></Link>
               </div>
             </div>

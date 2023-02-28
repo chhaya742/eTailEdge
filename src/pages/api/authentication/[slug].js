@@ -101,7 +101,7 @@ export default async function handler(req, res, next) {
         // console.log(email);
         try {
             const result = await knex("user").select("*").where({ email: email })
-            console.log(result);
+            // console.log(result);
             if (result[0].email.length > 0) {
                 var token = result[0].token
                 var sent = sendEmail(email, token);
@@ -121,10 +121,10 @@ export default async function handler(req, res, next) {
         try {
             const { password, confirmpassword } = req.body
             const token = req.query.token
-            console.log(token);
+            // console.log(token);
             const newPassword = bcrypt.hashSync(password, saltRounds);
             const result = await knex("user").update({ password: newPassword }).where({ token: token })
-            console.log(result);
+            // console.log(result);
             if (result > 0) {
                 // console.log(result);
                 const user = await knex("user").select("*").where({ token: token })

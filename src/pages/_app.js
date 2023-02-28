@@ -1,4 +1,4 @@
-// import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.css'
 import "../styles/globals.css";
 import Footer from 'components/Footer'
 import NavBar from 'components/NavBar'
@@ -109,7 +109,7 @@ export default function App({ Component, pageProps }) {
     router.push("/checkout")
 
   }
-  
+  // console.log("subtotal",total);
   return <>
     <LoadingBar
       color='#ff2d55'

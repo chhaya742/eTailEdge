@@ -12,7 +12,7 @@ const ResetPassword = () => {
         // user.token = localStorage.getItem("token")
         // console.log(router.query);
         const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/update-password?token=${router.query.token}`, user)
-        console.log(data);
+        // console.log(data);
         if(data.status){
             localStorage.setItem("token", data.data[0].token)
             router.push("/")
@@ -59,7 +59,7 @@ const ResetPassword = () => {
         setUser({ ...user, [name]: value })
     }
     const handleSubmit = (e) => {
-        console.log("Chhaya");
+        // console.log("Chhaya");
         e.preventDefault();
         const error = handleError(user)
         setError(error)
