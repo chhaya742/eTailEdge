@@ -10,10 +10,11 @@ const Signup = () => {
   const [error, setError] = useState({ isError: true })
 
   const request = async () => {
-    const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/signup`, user)
-    if (data.data.status) {
-      localStorage.setItem("token",data.data.data)
-      localStorage.setItem("user",data.data.data[0])
+    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/signup`, user)
+    if (data.status) {
+      console.log(data.data);
+      localStorage.setItem("token",data.data.token)
+      localStorage.setItem("user",JSON.stringify(data.data))
       toast.success("Your account has created successfully")
       if(localStorage.getItem("token")){
         setTimeout(() => {
@@ -26,6 +27,7 @@ const Signup = () => {
   }
 
   useEffect(() => {
+    
     if (!error.isError) {
       request(user);
     }
@@ -36,6 +38,8 @@ const Signup = () => {
     setUser({ ...user, [name]: value })
   }
   const hamdleError = (user) => {
+    // const passvalid=^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$
+    const passvalid = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
     const { name, email, password } = user
     const error = {};
     let isError = false;
@@ -52,7 +56,12 @@ const Signup = () => {
     if (!password) {
       error.password = "password is requiered";
       isError = true;
-
+    }else{
+      console.log(password.match(passvalid));
+      if(!password.match(passvalid)){
+        error.password =  <p className='text-sm text-green-600 py-2'>Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character should be in passwod:</p>;
+        isError = true;
+      }
     }
     error.isError = isError;
     return error
@@ -84,6 +93,7 @@ const Signup = () => {
               {error.email && <div style={{ color: "red" }}>{error.email}</div>}
             </div>
             <div>
+           
               <input onChange={(e) => handleInput(e.target)} type="password" value={user.password} className="block border border-grey-light w-full p-3 rounded mb-4" name="password" placeholder="Password" />
               {error.password && <div style={{ color: "red" }}>{error.password}</div>}
             </div>

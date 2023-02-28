@@ -20,20 +20,22 @@ export default async function handler(req, res, next) {
             let data = await knex("user").insert({ name, email, password: newPassword })
             const user = await knex("user").select("*").where({ id: data[0] });
             var token = jwt.sign({ user: user[0] }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "1h" })
-            res.status(200).json({ status: true, message: "add user successfully", data: token })
+            await knex("user").update({token:token}).where({id:data[0]})
+            user[0].token=token
+            res.status(200).json({ status: true, message: "add user successfully", data: user[0] })
         } catch (error) {
             console.log(error);
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         }
     }
     if (slug == "login") {
-
         try {
             const data = await knex("user").select("*").where({ email: req.body.email })
             if (data.length > 0) {
                 const decryptedData = bcrypt.compareSync(req.body.password, data[0].password)
                 if (decryptedData) {
                     var token = jwt.sign({ user: data[0] }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "1h" })
+                    await knex("user").update({token:token}).where({id:data[0].id})
                     data[0]["token"] = token
                     res.status(200).json({ status: true, message: "user login successfully", data: data })
                 } else {
@@ -125,7 +127,7 @@ export default async function handler(req, res, next) {
             console.log(result);
             if (result > 0) {
                 // console.log(result);
-                const user = await knex("user").select("*")
+                const user = await knex("user").select("*").where({ token: token })
                 var accesstoken = jwt.sign({ user: user[0] }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "1h" })
                 await knex("user").update({ token: accesstoken }).where({ token: token })
                 // console.log(accesstoken);

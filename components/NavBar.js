@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken"
 const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl }) => {
     const [dropDown, setDropDown] = useState(false)
     const [toggle, settoggle] = useState(false)
-const [name, setName] = useState('')
+const [userDetails, setUserDetails] = useState({name:"",email:""})
     const toggleCart = () => {
         settoggle(true)
     }
@@ -18,7 +18,8 @@ const [name, setName] = useState('')
     }
     useEffect(() => {
         if(localStorage.getItem("token")){
-            setName(jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.name)
+            userDetails.name=jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.name
+            userDetails.email=jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.email
         }
     }, [])
     
@@ -27,9 +28,10 @@ const [name, setName] = useState('')
             <div className='logo flex items-center' >
                 <div className='mx-2'>
                     {dropDown &&
-                        <div onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-9 top-10 shadow-lg bg-pink-200 px-5 py-1 rounded-md w-60 h-60'>
+                        <div onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-9 top-10 shadow-lg bg-pink-200 px-5 py-1 rounded-md w-70 h-60'>
                             <ul >
-                                <Link href={"/myaccount"}><li className='py-1 hover:text-white  text-base flex '><MdManageAccounts className='py-1 mx-4 text-3xl' /><span className='font-semibold underline'> {name}</span></li></Link>
+                                <Link href={"/myaccount"}><li className='py-1 hover:text-white  text-base flex '><MdManageAccounts className='py-1 mx-4 text-3xl' /><span className='font-semibold underline'> {userDetails.name}</span></li></Link>
+                                <span className='px-8'> {userDetails.email}</span>
 
                                 <Link href={"/orders"}><li className='py-1 hover:text-white text-lg flex'><BsFillBagCheckFill className='py-1 mx-4  text-3xl' />Orders</li></Link>
                                 <hr />
@@ -65,16 +67,16 @@ const [name, setName] = useState('')
                 <ol className='list-decimal font-semibold' >
                 
                     {Object.keys(cart).length == 0 && <div className='my-4 font-semibold'> Your cart is empty !</div>}
-                    {Object.keys(cart).map((item) => {
+                    {localStorage.getItem("cart")!=null?Object.keys(cart).map((item) => {
                         return <li key={item}>
                             <div className="item flex my-5">
                                 <div className='w-2/3 font-semibold'> {cart[item].name}</div>
                                 <div className='flex font-semibold items-center justify-center w-1/3' ><AiFillMinusCircle onClick={() => removeCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer text-base text-pink-500' /><span className='mx-2 text-sm'>{cart[item].qyt}</span><AiFillPlusCircle onClick={() => addToCart(item, cart[item].id, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer te xt-base text-pink-500' /></div>
                             </div>
                         </li>
-                    })}
+                    }):<div className='my-4 font-semibold'> Your cart is empty !</div>}
                 </ol>
-                <div className="total font-bold">Subtotal: ₹{subtl}</div>
+                <div className="total font-bold">Subtotal: ₹{localStorage.getItem("cart")!=null?subtl:0}</div>
                 <div className="flex mt-5 ">
 
                     <Link href={localStorage.getItem("token") ? "/checkout" : "/login"}> <button disabled={subtl > 0 ? false : true} className="flex mx-auto  text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm disabled:bg-pink-300"> <BsFillBagCheckFill className='m-1' />checkout</button></Link>
