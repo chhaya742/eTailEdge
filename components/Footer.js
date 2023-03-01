@@ -9,7 +9,7 @@ const Footer = () => {
             <footer className="text-gray-600 body-font ">
                 <div className="container px-5 md:py-24 py-18 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
                     <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-                        <Link href={"/"}><img className='m-auto h-12 w-25' src="/logo.png" alt="CodesWear" /></Link>
+                        <Link href={"/"}><img className='m-auto h-12 w-30' src="/logo.png" alt="CodesWear" /></Link>
                         <p className="mt-2 text-sm text-gray-500 px-6">CodesWear -Wear The &lt;code&gt; premium coding tshirts and hoodies and apperalas</p>
                     </div>
                     <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10  text-center">

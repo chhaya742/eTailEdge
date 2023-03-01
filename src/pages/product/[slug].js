@@ -1,14 +1,15 @@
+import Error from 'next/error'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import knex from '../../../database-config'
 
 import Link from 'next/link'
 import { toast } from 'react-toastify'
-const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeSlug }) => {
-
+const Slug = ({ error,cart, addToCart, removeCart, buyNow, subtl, products, colorSizeSlug }) => {
+console.log(error);
   const router = useRouter()
   const { slug } = router.query
-  const [pin, setpin] = useState('')
+  const [pin, setpin] = useState()
   const [service, setservice] = useState()
 
   const CheckServiceAbility = async () => {
@@ -26,19 +27,27 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
   const handleInput = (e) => {
     setpin(e.target.value)
   }
-  const [color, setColor] = useState(products[0].color)
-  const [size, setSize] = useState(products[0].size)
+  const [color, setColor] = useState()
+  const [size, setSize] = useState()
+  useEffect(() => {
+   if(!error){
+     setColor(products[0].color)
+     setSize(products[0].size)
+    }
+
+  }, [router.query])
+
   const refreshVariant = (newSize, newColor) => {
-   
     let url = `${process.env.NEXT_PUBLIC_localhost}/product/${colorSizeSlug[newColor][newSize]['slug']}`
-    window.location = url
+    router.push(url) 
+    
   }
 
   // const buyNow = (e, slug, price, size, title, color) => {
   //   e.preventDefault();
   //   clearCart()
-   
-  
+
+
   //   setTimeout(() => {
   //     addToCart(slug, 1, price, size, title, color)
   //     router.push("/checkout")
@@ -46,7 +55,11 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
 
 
   // }
-
+  // console.log(error=404);
+  if(error==404){
+    console.log(error);
+    return <Error statusCode={404} />
+  }
   return (
     <>
       {Object.keys(products).map((item) => {
@@ -105,7 +118,7 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
                     {Object.keys(colorSizeSlug).includes("green") && Object.keys(colorSizeSlug["green"]).includes(size) && <button onChange={(e) => refreshVariant(color, "green")} className={`border-2  ml-1 bg-green-300 rounded-full w-6 h-6 focus:outline-none ${color == 'green' ? "border-black" : "border-gray-300"}`}></button>}
 
                     {Object.keys(colorSizeSlug).includes("yellow") && Object.keys(colorSizeSlug["yellow"]).includes(size) && <button onChange={(e) => refreshVariant(color, "yellow")} className={`border-2  ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none ${color == 'red' ? "border-black" : "border-gray-300"}`}></button>}
-                    
+
                     {Object.keys(colorSizeSlug).includes("blue") && Object.keys(colorSizeSlug["blue"]).includes(size) && <button onChange={(e) => refreshVariant(color, "blue")} className={`border-2  ml-1 bg-blue-900 rounded-full w-6 h-6 focus:outline-none ${color == 'blue' ? "border-black" : "border-gray-300"}`}></button>}
 
                     {Object.keys(colorSizeSlug).includes("gray") && Object.keys(colorSizeSlug["gray"]).includes(size) && <button onChange={(e) => refreshVariant(color, "gray")} className={`border-2  ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none ${color == 'gray' ? "border-black" : "border-gray-300"}`}></button>}
@@ -118,13 +131,13 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
                     <span className="mr-3">Size</span>
                     <div className="relative">
                       <select value={size} onChange={(e) => refreshVariant(e.target.value, color)} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
-                        {Object.keys(colorSizeSlug[color]).includes("XS") && <option value={"XS"}>XS</option>}
-                        {Object.keys(colorSizeSlug[color]).includes("S") && <option value={"S"}>S</option>}
-                        {Object.keys(colorSizeSlug[color]).includes("SM") && <option value={"SM"}>SM</option>}
-                        {Object.keys(colorSizeSlug[color]).includes("L") && <option value={"L"}>L</option>}
-                        {Object.keys(colorSizeSlug[color]).includes("M") && <option value={"M"}>M</option>}
-                        {Object.keys(colorSizeSlug[color]).includes("XL") && <option value={"XL"}>XL</option>}
-                        {Object.keys(colorSizeSlug[color]).includes("XXL") && <option value={"XXL"}>XXL</option>}
+                        {color && Object.keys(colorSizeSlug[color]).includes("XS") && <option value={"XS"}>XS</option>}
+                        {color && Object.keys(colorSizeSlug[color]).includes("S") && <option value={"S"}>S</option>}
+                        {color && Object.keys(colorSizeSlug[color]).includes("SM") && <option value={"SM"}>SM</option>}
+                        {color && Object.keys(colorSizeSlug[color]).includes("L") && <option value={"L"}>L</option>}
+                        {color && Object.keys(colorSizeSlug[color]).includes("M") && <option value={"M"}>M</option>}
+                        {color && Object.keys(colorSizeSlug[color]).includes("XL") && <option value={"XL"}>XL</option>}
+                        {color && Object.keys(colorSizeSlug[color]).includes("XXL") && <option value={"XXL"}>XXL</option>}
                       </select>
                       <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4" viewBox="0 0 24 24">
@@ -135,9 +148,10 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
                   </div>
                 </div >
                 <div className="flex">
-                  <span className="title-font font-medium text-2xl text-gray-900">₹{products[item].price}</span>
-                  <button onClick={(e) => buyNow(products[item].slug, 1, products[item].id, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} value="buyNow" className="flex ml-8  text-white bg-pink-500 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Buy Now</button>
-                  <button onClick={() => addToCart(products[item].slug,products[item].id, 1, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} className="flex ml-4  text-white bg-pink-500 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Add To Cart</button>
+                  {products[0].availableqyt >0 && <span className="title-font font-medium text-2xl text-gray-900">₹{products[item].price}</span> }
+                  {products[0].availableqyt <= 0 && <span className="title-font font-medium text-2xl text-gray-900">Out Of Stock !</span> }
+                  <button disabled={products[0].availableqyt <= 0 ? true : false} onClick={(e) => buyNow(products[item].slug, 1, products[item].id, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} value="buyNow" className="flex ml-8  text-white bg-pink-500  disabled:bg-pink-300 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Buy Now</button>
+                  <button disabled={products[0].availableqyt <= 0 ? true : false} onClick={() => addToCart(products[item].slug, products[item].id, 1, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} className="flex ml-4  text-white bg-pink-500 disabled:bg-pink-300 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Add To Cart</button>
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                     <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                       <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
@@ -176,9 +190,17 @@ const Slug = ({ cart, addToCart, removeCart, buyNow, subtl, products, colorSizeS
 
 
 export async function getServerSideProps(context) {
+  let error=null
   let products = await knex("product").select("*").where({ slug: context.query.slug })
+console.log(products.length)
+  if(products.length<1){
+    console.log(products.length)
+    console.log(products)
+    return {
+      props: { error:404 }
+    }
+  }
   products = Object.values(JSON.parse(JSON.stringify(products)));
-
   let variant = await knex("product").select("*").where({ title: products[0].title, category: products[0].category })
   variant = Object.values(JSON.parse(JSON.stringify(variant)));
   let colorSizeSlug = {}
@@ -192,7 +214,7 @@ export async function getServerSideProps(context) {
     }
   }
   return {
-    props: { products, colorSizeSlug }
+    props: { error, products, colorSizeSlug }
   }
 };
 

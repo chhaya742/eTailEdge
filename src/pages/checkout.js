@@ -5,6 +5,7 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import jwt from 'jsonwebtoken';
+
 const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
   const [id, setId] = useState(1)
   const router = useRouter()
@@ -27,6 +28,7 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
     const token = localStorage.getItem('token');
     var decodedToken = jwt.decode(token, { complete: true });
     userDetails.userid = parseInt(decodedToken.payload.user.id)
+    setemail(parseInt(decodedToken.payload.user.email))
     userDetails.productid = pId
     userDetails.amount = subtl
     const { data } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, userDetails)
@@ -44,6 +46,9 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    var decodedToken = jwt.decode(token, { complete: true });
+    setemail(decodedToken.payload.user.email)
     if (!error.isError) {
       setPay(false)
       request(userDetails);
@@ -153,7 +158,7 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            <input type="email" id="email" name="email" onChange={(e) => handleInput(e.target)} value={email} className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input type="email" id="email" name="email" onChange={(e) => handleInput(e.target)} value={email} className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out " readOnly={true} />
             {error.email && <div style={{ color: "red" }}>{error.email}</div>}
           </div>
         </div>

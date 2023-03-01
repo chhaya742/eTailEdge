@@ -34,22 +34,91 @@ export default async function handler(req, res) {
         }
     }
     if (slug == "get-order") {
-        console.log(auth);
-        let products = [];
-        try {
-            const data = jwt.verify(req.body.token, process.env.NEXT_PUBLIC_jwtprivateKey)
-            let orders = await knex("orders").select("*").where({ userid: data.user.id })
-            orders = JSON.parse(JSON.stringify(orders))
-           
-            for (let i of orders) {
-                const product = await knex("product").select("*").where({ id: i.productid })
-                products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
+        let { offset = 0, limit = 10, order = "asc", sort = "id", search } = req.body;
+        let results = knex("orders")
+        // console.log(search);
+        results = results.where(function () {
+            if (search != undefined && search != "") {
+                // this.orWhereILike("id ", `%${search}%`)
+                this.orWhereILike("orderId", `%${search}%`)
+                // this.orWhereILike("status", `%${search}%`)
             }
-      
-            res.status(200).json({ status: true, message: "orders fetch  successfully", data: { products:products, orders:orders } })
-        } catch (error) {
-            console.log(error);
-            res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
+        })
+
+        let total = await knex.count("id").from('orders').first();
+        // console.log(Object.values(total)[0]);
+        // total = await results.select(knex.raw('count(*) as total, status')).first() 
+
+        let rows = knex("orders")
+
+        rows = rows.where(function () {
+            if (search != undefined && search != "") {
+                this.orWhereILike("orderId", `%${search}%`)
+
+                // this.orWhereILike("status", `%${search}%`)
+                this.orWhereILike("id", `%${search}%`)
+            }
+        })
+
+
+        if (order === null || order === "") {
+            order = "id"
         }
+        rows = await rows.orderBy(sort, order).limit(limit).offset(offset)
+
+
+        let data_rows = [];
+        let products = [];
+        if (order === "desc") {
+            let sr = offset + 1;
+            await rows.forEach(row => {
+                row.sr = sr;
+                delete row.password;
+                data_rows.push(row);
+                sr++;
+            });
+        } else {
+            let sr = Object.values(total)[0] - (limit * offset)
+            await rows.forEach(row => {
+                row.sr = sr;
+                delete row.password;
+                data_rows.push(row);
+                sr--;
+            });
+        }
+        console.log(data_rows);
+        for (let i of data_rows) {
+            const product = await knex("product").select("*").where({ id: i.productid })
+            products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
+        }
+        total = (Object.values(total)[0] != undefined) ? Object.values(total)[0] : 0;
+
+
+        res.status(200).json({
+            status: true,
+            message: "Orders retrieved successfully.",
+            total: total,
+            data: { rows: data_rows, products: products }
+        });
+
+
+
+        // console.log(auth);
+        //     let products = [];
+        //     try {
+        //         const data = jwt.verify(req.body.token, process.env.NEXT_PUBLIC_jwtprivateKey)
+        //         let orders = await knex("orders").select("*").where({ userid: data.user.id })
+        //         orders = JSON.parse(JSON.stringify(orders))
+
+        // for (let i of orders) {
+        //     const product = await knex("product").select("*").where({ id: i.productid })
+        //     products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
+        // }
+
+        //         res.status(200).json({ status: true, message: "orders fetch  successfully", data: { products: products, orders: orders } })
+        //     } catch (error) {
+        //         console.log(error);
+        //         res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
+        //     }
     }
 }

@@ -1,4 +1,4 @@
-// import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.css'
 import "../styles/globals.css";
 import Footer from 'components/Footer'
 import NavBar from 'components/NavBar'
