@@ -109,7 +109,7 @@ export default function App({ Component, pageProps }) {
     router.push("/checkout")
 
   }
-  
+  // console.log("subtotal",total);
   return <>
     <LoadingBar
       color='#ff2d55'

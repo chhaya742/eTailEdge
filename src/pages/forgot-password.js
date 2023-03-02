@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     const request = async () => {
         const { data } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/forgot-password`, { email: email })
         if (data.status) {
-            console.log(data.message);
+            // console.log(data.message);
             const { result } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/reset-password`, { email: email })
             toast.success(data.message)
 
@@ -21,7 +21,7 @@ const ForgotPassword = () => {
     useEffect(() => {
 
         if (!error.isError) {
-            console.log("chahya");
+            // console.log("chahya");
             request(email)
         }
     }, [error])
