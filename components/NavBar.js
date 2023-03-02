@@ -19,9 +19,13 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
         settoggle(false)
     }
     useEffect(() => {
-        if(localStorage.getItem("token")){
-            userDetails.name=jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.name
-            userDetails.email=jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.email
+        if (localStorage.getItem("token")) {
+            userDetails.name = jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.name
+            userDetails.email = jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.email
+        }
+        let path = ['/checkout', '/order', '/orders']
+        if (path.includes(router.pathname)) {
+            setDropDown(false)
         }
     }, [])
 
@@ -44,7 +48,7 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
                             </ul>
                             <div onClick={logout} className='py-1 absolute bottom-2 hover:text-white text-lg flex' ><AiOutlineLogout className='py-1 mx-1  text-3xl' />logout</div>
                         </div>}
-                    {user.value && <MdAccountCircle onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-16 top-4 text-xl md:text-2xl cursor-pointer' />}
+                        {user.value && <MdAccountCircle onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-16 top-4 text-xl md:text-2xl cursor-pointer mr-4' />}
                     {!user.value && <Link href={"/login"}>
                         <button className='bg-pink-600 px-1 py-1 rounded-md absolute right-16 top-1 text-xl md:text-xl cursor-pointer mr-4'>login</button>
                     </Link>}
