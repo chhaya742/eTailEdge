@@ -1,8 +1,15 @@
 var express = require('express');
 var router = express.Router();
-var cors = require('cors')
 
-express().use(cors()) // Use this after the variable declaration
+const cors = require('cors');
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
+
+
 var nodemailer = require('nodemailer');
 var randtoken = require('rand-token');
 
