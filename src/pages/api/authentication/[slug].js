@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var cors = require('cors')
 
+express().use(cors()) // Use this after the variable declaration
 var nodemailer = require('nodemailer');
 var randtoken = require('rand-token');
 
