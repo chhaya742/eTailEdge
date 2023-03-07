@@ -101,12 +101,17 @@ export default function App({ Component, pageProps }) {
       myCart[itemCode].qyt = myCart[itemCode].qyt + qyt
     } else {
       myCart[itemCode] = {id, qyt: 1, price, size, name, variant }
-      toast("Product add to your cart")
+      // toast("Product add to your cart")
     }
 
     setCart(myCart)
     saveCart(myCart)
-    router.push("/checkout")
+    if(localStorage.getItem("toke")){
+      router.push("/checkout")
+    }else{
+      router.push("/login")
+    }
+   
 
   }
   // console.log("subtotal",total);
