@@ -20,11 +20,11 @@ module.exports = require('knex')({
     client: 'mysql',
     connection: {
         ssl: {},
-        host: process.env.NEXT_PUBLIC_DB_HOST,
-        port: process.env.NEXT_PUBLIC_DB_PORT,
-        user: process.env.NEXT_PUBLIC_DB_USERNAME,
-        password: process.env.NEXT_PUBLIC_DB_PASSWORD,
-        database: process.env.NEXT_PUBLIC_DB_DATABASE,
+        host:"us-east.connect.psdb.cloud",
+        port: "3306",
+        user:"n0pcdcbvlv11kg1867cy",
+        password:"pscale_pw_rx62M5gvFWwSLd1kEiOEyZYEbSlmpXEXKIGdGK7fhzP",
+        database: "codeswear",
     }
 });
 

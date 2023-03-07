@@ -1,5 +1,9 @@
 var express = require('express');
+const app=express();
 var router = express.Router();
+
+
+
 
 var nodemailer = require('nodemailer');
 var randtoken = require('rand-token');
@@ -8,6 +12,9 @@ import knex from '../../../../database-config'
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
+const cors = require('cors');
+app.use(cors({origin: true, credentials: true}));
 
 export default async function handler(req, res, next) {
     const slug = req.query.slug
@@ -37,6 +44,7 @@ export default async function handler(req, res, next) {
                     var token = jwt.sign({ user: data[0] }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "1h" })
                     await knex("user").update({token:token}).where({id:data[0].id})
                     data[0]["token"] = token
+                    console.log( data[0]);
                     res.status(200).json({ status: true, message: "user login successfully", data: data })
                 } else {
                     res.status(200).json({ status: false, message: "your password is incorrect", data: [] })
