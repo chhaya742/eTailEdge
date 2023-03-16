@@ -1,7 +1,7 @@
 import Error from 'next/error'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import knex from '../../../database-config'
+import knex from '../../database-config'
 
 import Link from 'next/link'
 import { toast } from 'react-toastify'
@@ -68,7 +68,7 @@ console.log(error);
             <div className="lg:w-4/5 mx-auto flex flex-wrap">
               <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-top rounded" src={products[item].image} />
               <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-                <h2 className="text-sm title-font text-gray-500 tracking-widest">CodesWear</h2>
+                <h2 className="text-sm title-font text-gray-500 tracking-widest">eTailEdge</h2>
                 <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{`${products[item].title}(${products[item].size}/${products[item].color})`}</h1>
                 <div className="flex mb-4">
                   <span className="flex items-center">

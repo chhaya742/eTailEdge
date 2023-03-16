@@ -9,20 +9,20 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>CodesWear.com- Wear the Code</title>
-        <meta name="description" content="codeswear.com - Weear the Code" />
+        <title>eTailEdge.com- Wear the Code</title>
+        <meta name="description" content="eTailEdge.com - Weear the Code" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main >
         <div className='container mx-auto'>
-          <img className="w-full  h-full w-100" src="/banner-img-3.jpg" alt='codeswear' />
+          <img className="w-full  h-full w-100" src="/banner-img-3.jpg" alt='eTailEdge' />
         </div>
         <div>
           <section className="text-gray-600 body-font">
             <div className="container px-5 py-24 mx-auto">
               <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
-                <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Wear the Code with codeswear.com</h1>
+                <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Wear the Code with eTailEdge.com</h1>
                 <p className="lg:w-1/2 w-full leading-relaxed text-gray-500">wear Whatever you want? What do you want ? you want code ? so why not wear the cose</p>
               </div>
               <div className="flex flex-wrap -m-4">

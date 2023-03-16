@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-const knex = require('../../database-config')
+const knex = require('../database-config')
 import axios from 'axios'
 import Link from "next/link"
 import { IoMdRefreshCircle } from 'react-icons/io'

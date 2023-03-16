@@ -8,7 +8,7 @@ var router = express.Router();
 var nodemailer = require('nodemailer');
 var randtoken = require('rand-token');
 
-import knex from '../../../../database-config'
+import knex from '../../../database-config'
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -96,7 +96,7 @@ export default async function handler(req, res, next) {
             var mailOptions = {
                 from: 'chhaya@ditinteractive.com',
                 to: email,
-                subject: 'Reset Password Link - codeswear.com',
+                subject: 'Reset Password Link - eTailEdge.com',
                 html: '<p>You requested for reset password, kindly use this <a href="http://localhost:3000/reset-password?token=' + token + '">link</a> to reset your password</p>'
             };
             // api/authentication/reset-password?token=' + token + '

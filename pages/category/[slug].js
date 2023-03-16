@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
-import knex from '../../../database-config'
+import knex from '../../database-config'
 const Tshirts = ({ products, addToCart }) => {
   const router = useRouter()
   const { slug } = router.query

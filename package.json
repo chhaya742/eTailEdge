@@ -1,5 +1,5 @@
 {
-  "name": "codeswear",
+  "name": "eTailEdge",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -35,10 +35,17 @@
     "rand-token": "^1.0.1",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.0",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "18.2.0",
+    "react-feather": "^2.0.10",
     "react-icons": "^4.8.0",
+    "react-paginate": "^8.1.4",
     "react-toastify": "^9.1.1",
     "react-top-loading-bar": "^2.3.1",
+    "reactstrap": "^9.1.6",
+    "styled-components": "^5.3.9",
+    "sweetalert2": "^11.7.3",
+    "sweetalert2-react-content": "^5.0.7",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

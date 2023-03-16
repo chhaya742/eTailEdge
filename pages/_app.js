@@ -7,9 +7,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingBar from 'react-top-loading-bar'
 import { useRouter } from "next/router";
-import { ThemeProvider } from "@mui/material/styles";
-import FullLayout from "../src/layouts/FullLayout";
-import theme from "../src/theme/theme";
+
+
 
 export default function App({ Component, pageProps }) {
   const [progress, setProgress] = useState(0)
@@ -125,17 +124,12 @@ export default function App({ Component, pageProps }) {
       waitingTime={300}
       onLoaderFinished={() => setProgress(0)}
     />
-
-<NavBar logout={logout} buyNow={buyNow} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
-    <ThemeProvider theme={theme}>
-      <FullLayout>
-       
-        <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
-      
-        <ToastContainer position="top-center" autoClose={1000} pauseOnHover={false} />
-
-      </FullLayout>
-    </ThemeProvider>
+   
+      <NavBar logout={logout} buyNow={buyNow} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
+  
+      <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
+      <ToastContainer position="top-center" autoClose={1000} pauseOnHover={false} />
+ 
     <Footer />
   </>
 }

@@ -1,4 +1,4 @@
-import knex from '../../../../database-config'
+import knex from '../../../database-config'
 import {auth} from '../auth'
 import { v4 as uuidv4 } from 'uuid';
 var jwt = require('jsonwebtoken');
