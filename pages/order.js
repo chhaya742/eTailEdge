@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Link from "next/link"
-import knex from '../../database-config'
+import knex from '../database-config'
 // var jwt = require('jsonwebtoken');
 
 const Order = ({ orders ,product,subtl}) => {
