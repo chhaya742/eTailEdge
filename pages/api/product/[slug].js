@@ -1,5 +1,6 @@
 import knex from '../../../database-config'
 const path = require('path')
+import * as fs from 'fs'
 export default async function handler(req, res) {
     const paginateCourseTotal = async(searchFrom, search, status) => {
         let results = knex("product")
@@ -58,7 +59,7 @@ export default async function handler(req, res) {
                 }
                 }
             }
-            console.log(data);
+            // console.log(data);
             res.status(200).json({ status: true, message: "product list", data: data })
         } catch (error) {
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
@@ -108,7 +109,7 @@ export default async function handler(req, res) {
             });
             res.end()
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             res.json({error: true, message: "Something went wrong", data: e})
         }
         res.end()
@@ -122,9 +123,18 @@ export default async function handler(req, res) {
                 res.send("image field can't be blank")
             }
         
-            const filess =inputData.image
-            console.log(filess);
-            const uploadPath = path.join(__dirname, "..", '/uploads/', filess);
+            const filess =inputData.image.replace("/",'')
+            console.log(filess.replace("/",''));
+            const uploadPath = path.join(__dirname, "../../../../..", '/public/static/images/products/',filess);
+            // const data = fs.readFileSync(file.path);
+            // const saveFile = async (file) => {
+                // const data = fs.readFileSync(filess);
+                // fs.writeFileSync(`./public/${file.name}`, data);
+                // await fs.unlinkSync(file.path);
+                // return;
+            //   };
+            // D:\Chhaya\nextjs\eTailEdge\public\static\images\products
+            console.log("uploadPath",uploadPath);
             const fileName = '/uploads/'+ filess; 
             res.filepath = fileName 
             /* mv used for moving file */
@@ -149,6 +159,18 @@ export default async function handler(req, res) {
             const data = await knex("product").update(inputData).where({ "id": id })
             res.status(200).json({ status: true, message: "product update successfully ", data: data })
         } catch (error) {
+            res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
+        }
+    }
+    if (slug == "delete-product") {
+        // console.log("chhaya");
+        const id = req.body.id
+        // console.log(id);
+        try {
+            const data = await knex("product").delete().where({ "id": id })
+            res.status(200).json({ status: true, message: "product delete successfully ", data: data })
+        } catch (error) {
+            console.log(error);
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         }
     }

@@ -193,24 +193,27 @@ const Listing = () => {
   }
 
   const AddModal = () => {
-    const [file, setFile] = useState()
+    const [file, setFile] = useState(null)
+    console.log("file", file);
     const [form, setForm] = useState({
-      title:"",
-      slug:"",
-      image:"",
-      category:"",
-      description:"",
-      size:"",
-      color:"",
-      price:"",
-      availableqyt:"",
+      title: "",
+      slug: "",
+      image: "",
+      category: "",
+      description: "",
+      size: "",
+      color: "",
+      price: "",
+      availableqyt: "",
       status: "1"
     })
-    console.log("image",form.image);
+   
     const onSubmit = e => {
       e.preventDefault()
-
-      axios.post("http://localhost:3000/api/product/add-product",form).then(res => {
+      form.image = file
+      setFile(file)
+      console.log("form", form);
+      axios.post("http://localhost:3000/api/product/add-product", form).then(res => {
         if (res.data.error) {
           const resMessage = res.data.message
           if (Array.isArray(resMessage)) {
@@ -234,17 +237,17 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Title <span className='text-danger'>*</span></label>
                     <input type="text" name="title" value={form.title} onChange={e => {
-                     
+
                       setForm({ ...form, title: e.target.value })
                     }} className='form-control' placeholder='title' required />
                   </div>
                 </div>
-              
+
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Category <span className='text-danger'>*</span></label>
                     <input type="text" name="category" value={form.category} onChange={e => {
-                     
+
                       setForm({ ...form, category: e.target.value })
                     }} className='form-control' placeholder='category' required />
                   </div>
@@ -253,7 +256,7 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Color <span className='text-danger'>*</span></label>
                     <input type="text" name="color" value={form.color} onChange={e => {
-                     
+
                       setForm({ ...form, color: e.target.value })
                     }} className='form-control' placeholder='color' required />
                   </div>
@@ -262,7 +265,7 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Size <span className='text-danger'>*</span></label>
                     <input type="text" name="size" value={form.size} onChange={e => {
-                     
+
                       setForm({ ...form, size: e.target.value })
                     }} className='form-control' placeholder='size' required />
                   </div>
@@ -271,7 +274,7 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Price <span className='text-danger'>*</span></label>
                     <input type="text" name="price" value={form.price} onChange={e => {
-                     
+
                       setForm({ ...form, price: e.target.value })
                     }} className='form-control' placeholder='price' required />
                   </div>
@@ -280,7 +283,7 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Quantity <span className='text-danger'>*</span></label>
                     <input type="text" name="availableqyt" value={form.availableqyt} onChange={e => {
-                     
+
                       setForm({ ...form, availableqyt: e.target.value })
                     }} className='form-control' placeholder='quantity' required />
                   </div>
@@ -289,7 +292,7 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Slug <span className='text-danger'>*</span></label>
                     <input type="text" name="slug" value={form.slug} onChange={e => {
-                     
+
                       setForm({ ...form, slug: e.target.value })
                     }} className='form-control' placeholder='slug' required />
                   </div>
@@ -298,7 +301,7 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Description</label>
                     <Input name="description" type="textarea" onChange={e => {
-                     
+
                       setForm({ ...form, description: e.target.value })
                     }} />
                   </div>
@@ -306,11 +309,10 @@ const Listing = () => {
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Image <span className='text-danger'>*</span></label>
-                    <input type="file"  name="image"  onChange={e => {
-                    {/* <input type="file" name="image" value={form.image} onChange={e => { */}
-                      //
-                      setForm({ ...form, image:` /${e.target.files[0].name }`})
-                      setFile(event.target.files[0])
+                    <input type="file" name="image" onChange={e => {
+                      // setForm({ ...form, image:JSON.stringify(e.target.files[0])})
+                      // console.log(e.target.files[0].name);
+                      setFile(e.target.files[0])
                     }} className='form-control' placeholder='Short Name' required />
                   </div>
                 </div>
@@ -340,10 +342,10 @@ const Listing = () => {
               </div>
             </ModalBody>
             <ModalFooter>
-              <div  style={{backgroundColor:"blue"}}>
-              <Button color='primary' type='submit'>
-                Create
-              </Button>
+              <div className='bg-pink-600'>
+                <Button color='primary' type='submit'>
+                  Create
+                </Button>
               </div>
             </ModalFooter>
           </Form>
@@ -355,15 +357,23 @@ const Listing = () => {
   const EditModal = () => {
     const [form, setForm] = useState({
       id: editData.id,
-      name: editData.name,
-      short_name: editData.short_name,
+      title: editData.title,
+      slug: editData.slug,
+      image: editData.image,
+      category: editData.category,
       description: editData.description,
-      status: editData.status
+      size: editData.size,
+      color: editData.color,
+      price: editData.price,
+      availableqyt: editData.availableqyt,
+      status: editData.status,
+
     })
+    // console.log(editData.image);
 
     const onSubmitEdit = e => {
       e.preventDefault()
-      axios.post(new URL("course/update", themeConfig.backendUrl), form).then(res => {
+      axios.post("http://localhost:3000/api/product/update-product", form).then(res => {
         if (res.data.error) {
           const resMessage = res.data.message
           if (Array.isArray(resMessage)) {
@@ -385,28 +395,86 @@ const Listing = () => {
               <div className="row">
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
-                    <label>Name <span className='text-danger'>*</span></label>
-                    <input type="text" name="name" value={form.name} onChange={e => {
-                     
-                      setForm({ ...form, name: e.target.value })
-                    }} className='form-control' placeholder='Name' required />
+                    <label>Title <span className='text-danger'>*</span></label>
+                    <input type="text" name="title" value={form.title} onChange={e => {
+
+                      setForm({ ...form, title: e.target.value })
+                    }} className='form-control' placeholder='title' required />
+                  </div>
+                </div>
+
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Category <span className='text-danger'>*</span></label>
+                    <input type="text" name="category" value={form.category} onChange={e => {
+
+                      setForm({ ...form, category: e.target.value })
+                    }} className='form-control' placeholder='category' required />
                   </div>
                 </div>
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
-                    <label>Short Name <span className='text-danger'>*</span></label>
-                    <input type="text" name="name" value={form.short_name} onChange={e => {
-                      setForm({ ...form, short_name: e.target.value })
-                    }} className='form-control' placeholder='Short Name' required />
+                    <label>Color <span className='text-danger'>*</span></label>
+                    <input type="text" name="color" value={form.color} onChange={e => {
+
+                      setForm({ ...form, color: e.target.value })
+                    }} className='form-control' placeholder='color' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Size <span className='text-danger'>*</span></label>
+                    <input type="text" name="size" value={form.size} onChange={e => {
+
+                      setForm({ ...form, size: e.target.value })
+                    }} className='form-control' placeholder='size' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Price <span className='text-danger'>*</span></label>
+                    <input type="text" name="price" value={form.price} onChange={e => {
+
+                      setForm({ ...form, price: e.target.value })
+                    }} className='form-control' placeholder='price' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Quantity <span className='text-danger'>*</span></label>
+                    <input type="text" name="availableqyt" value={form.availableqyt} onChange={e => {
+
+                      setForm({ ...form, availableqyt: e.target.value })
+                    }} className='form-control' placeholder='quantity' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Slug <span className='text-danger'>*</span></label>
+                    <input type="text" name="slug" value={form.slug} onChange={e => {
+
+                      setForm({ ...form, slug: e.target.value })
+                    }} className='form-control' placeholder='slug' required />
                   </div>
                 </div>
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Description</label>
-                    <Input name="description" value={form.description} type="textarea" onChange={e => {
-                     
+                    <Input name="description" type="textarea" value={form.description} onChange={e => {
+
                       setForm({ ...form, description: e.target.value })
                     }} />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Image <span className='text-danger'>*</span></label>
+                    <input type="file" name="image" onChange={e => {
+                      {/* <input type="file" name="image" value={form.image} onChange={e => { */ }
+                      //
+                      setForm({ ...form, image: ` /${e.target.files[0].name}` })
+
+                    }} className='form-control' placeholder='Short Name' required />
                   </div>
                 </div>
                 <div className="col-md-12 mt-1">
@@ -435,9 +503,12 @@ const Listing = () => {
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button color='primary' type='submit'>
-                Update
-              </Button>
+              <div className='bg-pink-600'>
+                <Button color='primary' type='submit'>
+                  Update
+                </Button>
+
+              </div>
             </ModalFooter>
           </Form>
         </Modal>
@@ -452,13 +523,15 @@ const Listing = () => {
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
       customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-danger ms-1'
+        confirmButton: 'btn btn-primary bg-pink-600',
+        cancelButton: 'btn btn-danger ms-1 bg-pink-600'
       },
       buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
-        axios.post(new URL("course/delete", themeConfig.backendUrl), { id: row.id }).then(res => {
+        console.log(result.value);
+        console.log(row.id);
+        axios.post("http://localhost:3000/api/product/delete-product", { id: row.id }).then(res => {
           if (res.data.error) {
             const resMessage = res.data.message
             if (Array.isArray(resMessage)) {
@@ -471,11 +544,14 @@ const Listing = () => {
             title: 'Deleted!',
             text: "Deleted Successfully!",
             customClass: {
-              confirmButton: 'btn btn-success'
+              confirmButton: 'btn btn-success bg-pink-600'
             }
           })
           request()
         })
+      }
+      else {
+        console.log(result.value);
       }
     })
   }
@@ -493,7 +569,7 @@ const Listing = () => {
             <div className="card-body">
               <div className="d-flex justify-content-between align-center">
                 <h4>Products</h4>
-                <div style={{backgroundColor:"blue"}}>
+                <div className='bg-pink-600'>
 
                   <Button color='primary' size='sm' onClick={() => setAddModal(!addModal)}>Create</Button>
 
@@ -520,7 +596,7 @@ const Listing = () => {
                       <div className="col-md-3">
                         <div className="form-group">
                           <label>&nbsp;</label>
-                          <button className='btn btn-primary btn-sm form-control' onClick={request}><RefreshCw size={15} /></button>
+                          <button className='btn btn-primary btn-sm form-control bg-pink-600' onClick={request}><RefreshCw size={15} /></button>
                         </div>
                       </div>
                     </div>
