@@ -19,6 +19,7 @@ import theme from "../../src/theme/theme";
 import { ThemeProvider } from "@mui/material/styles";
 import FullLayout from "../../src/layouts/FullLayout";
 import upload from '../api/middlewear/upload'
+import { formControlClasses } from '@mui/material'
 
 const MySwal = withReactContent(Swal)
 
@@ -193,9 +194,7 @@ const Listing = () => {
   }
 
   const AddModal = () => {
-    const [file, setFile] = useState(null)
-    console.log("file", file);
-    const [form, setForm] = useState({
+    const [formData, setForm] = useState({
       title: "",
       slug: "",
       image: "",
@@ -207,13 +206,25 @@ const Listing = () => {
       availableqyt: "",
       status: "1"
     })
-   
+
+
+    // let formdata = {
+    //   title: form.title,
+    //   slug:form.slug,
+    //   image: form.image,
+    //   category: form.category,
+    //   description:form.description,
+    //   size: form.size,
+    //   color: form.color,
+    //   price: form.price,
+    //   availableqyt: form.availableqyt,
+    //   status: "1"
+    // }
+    console.log('formData', formData);
     const onSubmit = e => {
       e.preventDefault()
-      form.image = file
-      setFile(file)
-      console.log("form", form);
-      axios.post("http://localhost:3000/api/product/add-product", form).then(res => {
+      console.log("form",formData);
+      axios.post("http://localhost:3000/api/create-product", form).then(res => {
         if (res.data.error) {
           const resMessage = res.data.message
           if (Array.isArray(resMessage)) {
@@ -222,10 +233,11 @@ const Listing = () => {
           return toast.error(resMessage)
         }
         request()
-        setAddModal(false)
+        setEditModal(false)
         return toast.success(res.data.message)
       })
     }
+    console.log("image",formData.image.name);
     return (
       <div className='vertically-centered-modal'>
         <Modal isOpen={addModal} toggle={() => setAddModal(!addModal)} className='modal-dialog-centered'>
@@ -236,9 +248,9 @@ const Listing = () => {
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Title <span className='text-danger'>*</span></label>
-                    <input type="text" name="title" value={form.title} onChange={e => {
+                    <input type="text" name="title" value={formData.title} onChange={e => {
 
-                      setForm({ ...form, title: e.target.value })
+                      setForm({ ...formData, title: e.target.value })
                     }} className='form-control' placeholder='title' required />
                   </div>
                 </div>
@@ -246,54 +258,54 @@ const Listing = () => {
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Category <span className='text-danger'>*</span></label>
-                    <input type="text" name="category" value={form.category} onChange={e => {
+                    <input type="text" name="category" value={formData.category} onChange={e => {
 
-                      setForm({ ...form, category: e.target.value })
+                      setForm({ ...formData, category: e.target.value })
                     }} className='form-control' placeholder='category' required />
                   </div>
                 </div>
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Color <span className='text-danger'>*</span></label>
-                    <input type="text" name="color" value={form.color} onChange={e => {
+                    <input type="text" name="color" value={formData.color} onChange={e => {
 
-                      setForm({ ...form, color: e.target.value })
+                      setForm({ ...formData, color: e.target.value })
                     }} className='form-control' placeholder='color' required />
                   </div>
                 </div>
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Size <span className='text-danger'>*</span></label>
-                    <input type="text" name="size" value={form.size} onChange={e => {
+                    <input type="text" name="size" value={formData.size} onChange={e => {
 
-                      setForm({ ...form, size: e.target.value })
+                      setForm({ ...formData, size: e.target.value })
                     }} className='form-control' placeholder='size' required />
                   </div>
                 </div>
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Price <span className='text-danger'>*</span></label>
-                    <input type="text" name="price" value={form.price} onChange={e => {
+                    <input type="text" name="price" value={formData.price} onChange={e => {
 
-                      setForm({ ...form, price: e.target.value })
+                      setForm({ ...formData, price: e.target.value })
                     }} className='form-control' placeholder='price' required />
                   </div>
                 </div>
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Quantity <span className='text-danger'>*</span></label>
-                    <input type="text" name="availableqyt" value={form.availableqyt} onChange={e => {
+                    <input type="text" name="availableqyt" value={formData.availableqyt} onChange={e => {
 
-                      setForm({ ...form, availableqyt: e.target.value })
+                      setForm({ ...formData, availableqyt: e.target.value })
                     }} className='form-control' placeholder='quantity' required />
                   </div>
                 </div>
                 <div className="col-md-12 me-1 mt-1">
                   <div className="form-group">
                     <label>Slug <span className='text-danger'>*</span></label>
-                    <input type="text" name="slug" value={form.slug} onChange={e => {
+                    <input type="text" name="slug" value={formData.slug} onChange={e => {
 
-                      setForm({ ...form, slug: e.target.value })
+                      setForm({ ...formData, slug: e.target.value })
                     }} className='form-control' placeholder='slug' required />
                   </div>
                 </div>
@@ -302,7 +314,7 @@ const Listing = () => {
                     <label>Description</label>
                     <Input name="description" type="textarea" onChange={e => {
 
-                      setForm({ ...form, description: e.target.value })
+                      setForm({ ...formData, description: e.target.value })
                     }} />
                   </div>
                 </div>
@@ -310,27 +322,26 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Image <span className='text-danger'>*</span></label>
                     <input type="file" name="image" onChange={e => {
-                      // setForm({ ...form, image:JSON.stringify(e.target.files[0])})
-                      // console.log(e.target.files[0].name);
-                      setFile(e.target.files[0])
+                      setForm({ ...formData, image: e.target.files[0] })
                     }} className='form-control' placeholder='Short Name' required />
                   </div>
+                  {formData.image && <img src={`/${formData.image.name}`} width={100} height={50} />}
                 </div>
                 <div className="col-md-12 mt-1">
                   <div className="form-control" style={{ border: "0px" }}>
                     <label>Status</label>
                     <div className="d-flex">
                       <div className='form-check me-1'>
-                        <Input type='radio' required id='status-active' name='status' value="1" checked={form.status === "1"} onChange={e => {
-                          setForm({ ...form, status: e.target.value })
+                        <Input type='radio' required id='status-active' name='status' value="1" checked={formData.status === "1"} onChange={e => {
+                          setForm({ ...formData, status: e.target.value })
                         }} />
                         <Label className='form-check-label' for='status-active'>
                           Active
                         </Label>
                       </div>
                       <div className='form-check me-1'>
-                        <Input type='radio' required id='status-deactive' name='status' value="2" checked={form.status === "2"} onChange={e => {
-                          setForm({ ...form, status: e.target.value })
+                        <Input type='radio' required id='status-deactive' name='status' value="2" checked={formData.status === "2"} onChange={e => {
+                          setForm({ ...formData, status: e.target.value })
                         }} />
                         <Label className='form-check-label' for='status-deactive'>
                           Inactive
@@ -551,7 +562,7 @@ const Listing = () => {
         })
       }
       else {
-        console.log(result.value);
+        // console.log(result.value);
       }
     })
   }

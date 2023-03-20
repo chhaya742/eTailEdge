@@ -1,8 +1,10 @@
 import knex from '../../../database-config'
-const path = require('path')
-import * as fs from 'fs'
+
+import fs from "fs";
+import path from "path";
+
 export default async function handler(req, res) {
-    const paginateCourseTotal = async(searchFrom, search, status) => {
+    const paginateCourseTotal = async (searchFrom, search, status) => {
         let results = knex("product")
         let total = 0
         if (status != undefined && status != "") {
@@ -24,7 +26,7 @@ export default async function handler(req, res) {
         if (status != undefined && status != "") {
             rows.where('status', `${status}`)
         }
-     
+
         rows = rows.where((query) => {
             if (search) {
                 searchFrom.map(val => {
@@ -33,7 +35,7 @@ export default async function handler(req, res) {
             }
         })
         rows = rows.orderBy(sort, order).limit(limit).offset(offset)
-     
+
         return rows
     }
     const slug = req.query.slug
@@ -44,7 +46,7 @@ export default async function handler(req, res) {
             for (let item of data) {
 
                 if (item.title in tshirts) {
-                  
+
                     if (!tshirts[item.title].color.includes(item.color) && item.availableqyt > 0) {
                         tshirts[item.title].color.push(item.color)
                     }
@@ -52,11 +54,11 @@ export default async function handler(req, res) {
                         tshirts[item.title].size.push(item.size)
                     }
                 } else {
-                tshirts[item.title] = JSON.parse(JSON.stringify(item))
-                if (item.availableqyt > 0) {
-                    tshirts[item.title].color = []
-                    tshirts[item.title].size = []
-                }
+                    tshirts[item.title] = JSON.parse(JSON.stringify(item))
+                    if (item.availableqyt > 0) {
+                        tshirts[item.title].color = []
+                        tshirts[item.title].size = []
+                    }
                 }
             }
             // console.log(data);
@@ -67,14 +69,14 @@ export default async function handler(req, res) {
     }
     if (slug == "products") {
         try {
-          
-            let {offset = 0, limit = 10, order = "asc", sort = "id", search, status} = req.body;
-    
+
+            let { offset = 0, limit = 10, order = "asc", sort = "id", search, status } = req.body;
+
             let searchFrom = [
                 "name"
             ]
             const total = await paginateCourseTotal(searchFrom, search, status)
-    
+
             const rows = await paginateCourse(limit, offset, searchFrom, status, sort, search, order)
             // rows = rows.map(row => {
             //     row.image = constants.getStaticUrl(row.image)
@@ -82,7 +84,7 @@ export default async function handler(req, res) {
             // })
             let data_rows = [];
             if (order === "asc") {
-                
+
                 let sr = total.total - (limit * offset)
                 await rows.forEach(row => {
                     row.sr = sr;
@@ -95,8 +97,8 @@ export default async function handler(req, res) {
                     row.sr = sr;
                     data_rows.push(row);
                     sr++;
-    
-                    
+
+
                 });
             }
             res.status(200).json({
@@ -110,42 +112,54 @@ export default async function handler(req, res) {
             res.end()
         } catch (e) {
             // console.log(e)
-            res.json({error: true, message: "Something went wrong", data: e})
+            res.json({ error: true, message: "Something went wrong", data: e })
         }
         res.end()
     }
 
     if (slug == "add-product") {
-        const inputData = req.body
-        console.log(inputData);
         try {
+            const inputData = req.body
+            console.log(req.body);
+            console.log("inputData", inputData.image);
+
             if (!inputData.image) {
-                res.send("image field can't be blank")
+                return res.send("image field can't be blank")
             }
-        
-            const filess =inputData.image.replace("/",'')
-            console.log(filess.replace("/",''));
-            const uploadPath = path.join(__dirname, "../../../../..", '/public/static/images/products/',filess);
-            // const data = fs.readFileSync(file.path);
-            // const saveFile = async (file) => {
-                // const data = fs.readFileSync(filess);
-                // fs.writeFileSync(`./public/${file.name}`, data);
-                // await fs.unlinkSync(file.path);
-                // return;
-            //   };
-            // D:\Chhaya\nextjs\eTailEdge\public\static\images\products
-            console.log("uploadPath",uploadPath);
-            const fileName = '/uploads/'+ filess; 
-            res.filepath = fileName 
-            /* mv used for moving file */
-            // filess.mv(uploadPath, function (err) {    
-        
-            //     if (err)
-            //         return res.status(500).send(err);
-            //     next()
+            // const form =formidable();
+            // form.parse(req.image,(err,field,files)=>{
+
             // })
-            const data = await knex("product").insert(inputData)
-            res.status(200).json({ status: true, message: "product added successfully ", data: data })
+            const filess = inputData.image;
+
+            const uploadPath = path.join(__dirname, "../../../../..", '/public/static/images/products/', filess);
+            fs.writeFileSync(uploadPath, filess)
+                // , async(error) => {
+                // if (error) {
+                //     console.log("chhayaa1");
+                //     console.error(error);
+                //     res.status(500).json({ error: 'Something went wrong.' });
+                // } else {
+                //     console.log("chhayaa2");
+                    const data = await knex("product").insert(inputData)
+                    res.status(200).json({ status: true, message: "product added successfully ", data: data })
+                // }
+            // });
+            inputData.image = `/${inputData.image}`
+
+            // if (!req.files) {
+            //     return res.status(200).json({ status: false, message: "image field can't be blank", data: [] })
+
+            // }
+            // const file = req.files.image
+            // // const filePath = path.join(__dirname, "../../../../..", '/public/static/images/products/', file.name)
+            // const filePath = path.indexPath + "/uploads/" + file.name;
+            // await file.mv(filePath)
+            // const file_data = reader.readFile(filePath)
+            // fs.unlinkSync(filePath)
+            // const images = file_data.SheetNames
+
+            
         } catch (error) {
             console.log(error);
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
