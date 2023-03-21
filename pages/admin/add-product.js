@@ -53,7 +53,7 @@ const Listing = () => {
       query.offset = 0
       setQuery(query)
     }
-    axios.post(new URL("http://localhost:3000/api/product/products"), query).then((res) => {
+    axios.post("http://localhost:3000/api/product/products", query).then((res) => {
       if (res.data.error) {
         const resMessage = res.data.message
         if (Array.isArray(resMessage)) {
@@ -91,7 +91,9 @@ const Listing = () => {
     {
       name: 'Image',
       maxWidth: '350px',
-      selector: row => row.image
+      selector: row => {
+        return( <img src={row.image} width={34} height={34}/>)
+        }
     },
     {
       name: 'Status',
@@ -220,11 +222,21 @@ const Listing = () => {
     //   availableqyt: form.availableqyt,
     //   status: "1"
     // }
-    console.log('formData', formData);
+    // console.log('formData', formData);
     const onSubmit = e => {
-      e.preventDefault()
-      console.log("form",formData);
-      axios.post("http://localhost:3000/api/create-product", form).then(res => {
+      console.log('formData', formData);
+      if (formData) {
+        const options = {
+          url: "http://localhost:3000/api/create-product",
+          method: "POST",
+          headers: {
+            'content-type': 'multipart/form-data'
+          },
+          data: formData
+        };
+  
+        axios(options)
+        .then((response) => {
         if (res.data.error) {
           const resMessage = res.data.message
           if (Array.isArray(resMessage)) {
@@ -237,7 +249,7 @@ const Listing = () => {
         return toast.success(res.data.message)
       })
     }
-    console.log("image",formData.image.name);
+    }
     return (
       <div className='vertically-centered-modal'>
         <Modal isOpen={addModal} toggle={() => setAddModal(!addModal)} className='modal-dialog-centered'>

@@ -11,7 +11,7 @@ export const config = {
 
 const upload = multer({
     storage: multer.diskStorage({
-        destination: path.join(__dirname, "../../../../..", './public/static/images/products/'),
+        destination: './public/products',
         filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname),
     }),
 });
@@ -28,10 +28,11 @@ const handler = nc({
 })
     .use(upload.single('image'))
     .post(async (req, res) => {
-        console.log(req.file.filename);
+        console.log(req.file);
         try {
             let insertData = req.body;
-            insertData.image=`/${req.file.filename}`
+            insertData.image=`/products/${req.file.filename}`
+        
             let data = await knex("product").insert(insertData);
             res.status(200).json({ status: true, message: "product added successfully ", data: data })
         } catch (error) {
