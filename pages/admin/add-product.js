@@ -209,7 +209,7 @@ const Listing = () => {
       status: "1"
     })
 
-
+const [image, setimage] = useState(null)
     // let formdata = {
     //   title: form.title,
     //   slug:form.slug,
@@ -334,10 +334,12 @@ const Listing = () => {
                   <div className="form-group">
                     <label>Image <span className='text-danger'>*</span></label>
                     <input type="file" name="image" onChange={e => {
+                      setimage( e.target.files[0])
                       setForm({ ...formData, image: e.target.files[0] })
+                      console.log("formData.image ",formData.image.name );
                     }} className='form-control' placeholder='Short Name' required />
                   </div>
-                  {formData.image && <img src={`/${formData.image.name}`} width={100} height={50} />}
+                  {image  && <img src={`/${image.name}`} width={100} height={50} />}
                 </div>
                 <div className="col-md-12 mt-1">
                   <div className="form-control" style={{ border: "0px" }}>
