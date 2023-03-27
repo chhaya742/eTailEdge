@@ -19,11 +19,12 @@ module.exports = require('knex')({
     client: 'mysql',
     connection: {
         ssl: {},
-        host:"us-east.connect.psdb.cloud",
+         host:"us-east.connect.psdb.cloud",
         port: "3306",
         database: "codeswear",
-        username: "8368k9qmmypbawu9v799",
-        password: "pscale_pw_r6ZiyTbbXZrcXrzHNkQQZ8199g8Y0MJhKN7mylkvWHp"
+        username: "0jz77wua1dynoyke5pz1",
+        password: "pscale_pw_MyCSY523ifsrnvonahA2oBNk0ku3RRy5UE0gFFB0bFw"
+
     }
 });
 
