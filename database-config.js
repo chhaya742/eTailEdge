@@ -21,9 +21,10 @@ module.exports = require('knex')({
         ssl: {},
         host:"us-east.connect.psdb.cloud",
         port: "3306",
-        user:"n0pcdcbvlv11kg1867cy",
-        password:"pscale_pw_rx62M5gvFWwSLd1kEiOEyZYEbSlmpXEXKIGdGK7fhzP",
         database: "codeswear",
+        username: "8368k9qmmypbawu9v799",
+        host: "us-east.connect.psdb.cloud",
+        password: "pscale_pw_r6ZiyTbbXZrcXrzHNkQQZ8199g8Y0MJhKN7mylkvWHp"
     }
 });
 
