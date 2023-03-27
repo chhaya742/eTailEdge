@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
 import knex from '../../database-config'
 const Tshirts = ({ products, addToCart }) => {
+  console.log("products",products);
   const router = useRouter()
   const { slug } = router.query
   return (
@@ -91,6 +92,7 @@ export async function getServerSideProps(context) {
       }
     }
   }
+
   return {
     props: { products }
   }

@@ -5,8 +5,8 @@ import knex from '../../database-config'
 
 import Link from 'next/link'
 import { toast } from 'react-toastify'
-const Slug = ({ error,cart, addToCart, removeCart, buyNow, subtl, products, colorSizeSlug }) => {
-console.log(error);
+const Slug = ({ error, cart, addToCart, removeCart, buyNow, subtl, products, colorSizeSlug }) => {
+  console.log(error);
   const router = useRouter()
   const { slug } = router.query
   const [pin, setpin] = useState()
@@ -30,17 +30,17 @@ console.log(error);
   const [color, setColor] = useState()
   const [size, setSize] = useState()
   useEffect(() => {
-   if(!error){
-     setColor(products[0].color)
-     setSize(products[0].size)
+    if (!error) {
+      setColor(products[0].color)
+      setSize(products[0].size)
     }
 
   }, [router.query])
 
   const refreshVariant = (newSize, newColor) => {
     let url = `${process.env.NEXT_PUBLIC_localhost}/product/${colorSizeSlug[newColor][newSize]['slug']}`
-    router.push(url) 
-    
+    router.push(url)
+
   }
 
   // const buyNow = (e, slug, price, size, title, color) => {
@@ -56,7 +56,7 @@ console.log(error);
 
   // }
   // console.log(error=404);
-  if(error==404){
+  if (error == 404) {
     console.log(error);
     return <Error statusCode={404} />
   }
@@ -148,8 +148,8 @@ console.log(error);
                   </div>
                 </div >
                 <div className="flex">
-                  {products[0].availableqyt >0 && <span className="title-font font-medium text-2xl text-gray-900">₹{products[item].price}</span> }
-                  {products[0].availableqyt <= 0 && <span className="title-font font-medium text-2xl text-gray-900">Out Of Stock !</span> }
+                  {products[0].availableqyt > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{products[item].price}</span>}
+                  {products[0].availableqyt <= 0 && <span className="title-font font-medium text-2xl text-gray-900">Out Of Stock !</span>}
                   <button disabled={products[0].availableqyt <= 0 ? true : false} onClick={(e) => buyNow(products[item].slug, 1, products[item].id, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} value="buyNow" className="flex ml-8  text-white bg-pink-500  disabled:bg-pink-300 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Buy Now</button>
                   <button disabled={products[0].availableqyt <= 0 ? true : false} onClick={() => addToCart(products[item].slug, products[item].id, 1, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} className="flex ml-4  text-white bg-pink-500 disabled:bg-pink-300 border-0 py-2 px-2 md:px-4 focus:outline-none hover:bg-pink-600 rounded">Add To Cart</button>
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
@@ -190,14 +190,14 @@ console.log(error);
 
 
 export async function getServerSideProps(context) {
-  let error=null
+  let error = null
   let products = await knex("product").select("*").where({ slug: context.query.slug })
-console.log(products.length)
-  if(products.length<1){
+  console.log(products)
+  if (products.length < 1) {
     console.log(products.length)
     console.log(products)
     return {
-      props: { error:404 }
+      props: { error: 404 }
     }
   }
   products = Object.values(JSON.parse(JSON.stringify(products)));

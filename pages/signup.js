@@ -11,8 +11,8 @@ const Signup = () => {
 
   const request = async () => {
     const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/signup`, user)
+    console.log(data);
     if (data.status) {
-      // console.log(data.data);
       localStorage.setItem("token",data.data.token)
       localStorage.setItem("user",JSON.stringify(data.data))
       toast.success("Your account has created successfully")
@@ -22,7 +22,8 @@ const Signup = () => {
         }, 1000);
       }
     } else {
-      toast.error(data.data.message)
+     
+      toast.error(data.message)
     }
   }
 

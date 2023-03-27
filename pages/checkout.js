@@ -101,11 +101,11 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
       isError = true;
 
     }
-    if (!email) {
-      error.email = "email is requiered";
-      isError = true;
+    // if (!email) {
+    //   error.email = "email is requiered";
+    //   isError = true;
 
-    }
+    // }
     if (!address) {
       error.address = "address is requiered";
       isError = true;
@@ -159,7 +159,7 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
           <div className=" mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
             <input type="email" id="email" name="email" onChange={(e) => handleInput(e.target)} value={email} className="w-full bg-white rounded border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out " readOnly={true} />
-            {error.email && <div style={{ color: "red" }}>{error.email}</div>}
+            {/* {error.email && <div style={{ color: "red" }}>{error.email}</div>} */}
           </div>
         </div>
       </div>

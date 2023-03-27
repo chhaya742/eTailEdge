@@ -4,7 +4,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 
-const Login = ({ data }) => {
+const Login = () => {
   // console.log(localStorage.getItem("user"));
   // console.log(data);
   const router = useRouter()
@@ -14,6 +14,7 @@ const Login = ({ data }) => {
   const request = async () => {
     const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`, user)
     if (data.data.status) {
+      console.log(data.data.status);
       localStorage.setItem("token", data.data.data[0].token)
       localStorage.setItem("user", JSON.stringify({ "id": data.data.data[0].id, "email": data.data.data[0].email, "name": data.data.data[0].name }))
       toast.success("You have loged in successfully")
@@ -29,7 +30,7 @@ const Login = ({ data }) => {
       router.push("/")
     }
     if (!error.isError) {
-     
+
       request(user);
     }
   }, [error])
@@ -40,6 +41,7 @@ const Login = ({ data }) => {
   }
 
   const hamdleError = (user) => {
+  // console.log("chaayaaa");
     const { email, password } = user
     const error = {};
     let isError = false;
@@ -61,6 +63,7 @@ const Login = ({ data }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // console.log("chhaya");
     const error = hamdleError(user);
     setError(error)
 
@@ -112,18 +115,18 @@ const Login = ({ data }) => {
   )
 }
 
-export async function getServerSideProps(context) {
-  // const [user, setuser] = useState({email:"",password:""})
-  console.log(context.query);
-  const user = {
-    email: "chhaya@ditinteractive.com",
-    password: "Chhaya@123"
-  }
-  const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`, user)
-  return {
-    props: { data: data.data }
-  }
-};
+// export async function getServerSideProps(context) {
+//   // const [user, setuser] = useState({email:"",password:""})
+//   console.log(.query);
+//   const user = {
+//     email: "chhaya@ditinteractive.com",
+//     password: "Chhaya@123"
+//   }
+//   const data = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/login`, user)
+//   return {
+//     props: { data: data.data }
+//   }
+// };
 
 
 export default Login

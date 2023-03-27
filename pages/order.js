@@ -11,8 +11,8 @@ const Order = ({ orders ,product,subtl}) => {
   // }
   // useEffect(() => {
   //   const token=localStorage.getItem("token")
-  //   const data=jwt.verify(token,process.env.jsonwebtoken)
-  //   request(data)
+    // const data=jwt.verify(token,process.env.jsonwebtoken)
+    // request(data)
   // }, [])
   
   return (
