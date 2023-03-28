@@ -35,7 +35,8 @@ const Listing = () => {
     search: "",
     order: 'desc',
     sort: 'id',
-    status: ""
+    status: "",
+    token:""
   })
 
   const handleFirstCharUpper = (e) => {
@@ -48,12 +49,15 @@ const Listing = () => {
     2: { title: 'Inactive', color: 'light-danger' }
   }
 
-  const request = (reset_offset = true) => {
+  const request = (token,reset_offset = true) => {
+    query.token=token
+    setQuery(query)
     if (reset_offset) {
       query.offset = 0
       setQuery(query)
     }
-    axios.post("http://localhost:3000/api/product/products", query).then((res) => {
+
+    axios.post("http://localhost:3000/api/order/get-order", query).then((res) => {
       if (res.data.error) {
         const resMessage = res.data.message
         if (Array.isArray(resMessage)) {
@@ -67,7 +71,7 @@ const Listing = () => {
   }
 
   useEffect(() => {
-    request()
+    request(localStorage.getItem("token"))
   }, [])
 
   const basicColumns = [
