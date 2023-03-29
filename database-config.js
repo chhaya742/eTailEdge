@@ -1,12 +1,12 @@
 import "dotenv"
-const mode = "live"
+const mode = "test"
 let options;
 if (mode == "live") {
     options = {
         client: 'mysql',
         connection: {
             ssl: {},
-            host: "us-east.connect.psdb.cloud",
+            host: "aws.connect.psdb.cloud",
             port: "3306",
             database: "codeswear",
             username: "0jz77wua1dynoyke5pz1",
