@@ -25,7 +25,7 @@ export default async function handler(req, res, next) {
         try {
             let data = await knex("user").insert({ name, email, password: newPassword })
             const user = await knex("user").select("*").where({ id: data[0] });
-            var token = jwt.sign({ user: user[0] }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "1h" })
+            var token = jwt.sign({ user: user[0] }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "8h" })
             await knex("user").update({ token: token }).where({ id: data[0] })
             user[0].token = token
             res.status(200).json({ status: true, message: "add user successfully", data: user[0] })
@@ -40,13 +40,12 @@ export default async function handler(req, res, next) {
             if (data.length > 0) {
                 const decryptedData = bcrypt.compareSync(req.body.password, data[0].password)
                 if (decryptedData) {
-                    var token = jwt.sign({ user: data[0] }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "1h" })
+                    var token = jwt.sign({ user:{id:data[0].id,password:data[0].password,email:data[0].email} }, process.env.NEXT_PUBLIC_jwtprivateKey, { expiresIn: "1h" })
                     await knex("user").update({ token: token }).where({ id: data[0].id })
                     data[0]["token"] = token
                     // console.log( data[0]);
                     res.status(200).json({ status: true, message: "user login successfully", data: data })
                     application.use(async (request, response, next) => {
-                        console.log("Chhaya")
                         console.log("databaseConnection", request['databaseConnection']);
                         console.log(`\x1b[32m[REQ]:\x1b[0m \x1b[100m\x1b[33m${request.baseUrl}${request.url}\x1b[0m`);
                         // const { getDatabaseConnection } = require("./Sources/Models/BaseModelAdvanced");

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState ,useCallback} from 'react'
 const knex = require('../database-config')
 import axios from 'axios'
 import Link from "next/link"
@@ -30,7 +30,6 @@ const Orders = () => {
       query.offset = 0
       setQuery(query)
     }
-    console.log(query);
     await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/get-order`, query).then((res) => {
       if (!res.data.status) {
         const resMessage = res.data.data.message
@@ -39,9 +38,8 @@ const Orders = () => {
         }
         return toast.error(resMessage)
       }
-   
+
       const resRow = res.data.data.rows
-         console.log(resRow);
       setTotal(res.data.total)
       setOrders(resRow);
       setProduct(res.data.data.products);
@@ -56,25 +54,16 @@ const Orders = () => {
     }
   }, []);
 
-  const refresClick = () => {
-    query.search = ""
-    query.status = ""
-    setQuery(query)
-    request()
-  }
-
-
   const handlePagination = e => {
-   const  forcePage=Math.ceil(total / query.limit)
-   if(forcePage>1){
-    console.log(e )
-    query.offset = e 
-    setQuery(query)
-    request(token, false)
-    // console.log(query);
-   }
-     
-   
+    const forcePage = Math.ceil(total / query.limit)
+    if (forcePage > 1) {
+      query.offset = e
+      setQuery(query)
+      request(token, false)
+      // console.log(query);
+    }
+
+
   }
 
   const CustomPagination = () => {
@@ -85,7 +74,7 @@ const Orders = () => {
       request(token)
     }
     // console.log("pageCount", [Math.ceil(total / query.limit)]);
- 
+
     return (
       <div className="mt-2 mb-2 ">
         <div className="container position-absolute">
@@ -104,27 +93,35 @@ const Orders = () => {
         <ul className="pagination separated-pagination pagination-sm justify-content-end pe-1">
           {[...Array(Math.ceil(total / query.limit)).keys()].map((item) => {
             return <li key={item} className="page-item" >
-              <button role="button" className="page-link" tabIndex="0" aria-label="Page 1 is your current page" aria-current="page" value={item+1} onClick={(e) => handlePagination(e.target.value)}>{item + 1}</button>
+              <button role="button" className="page-link" tabIndex="0" aria-label="Page 1 is your current page" aria-current="page" value={item + 1} onClick={(e) => handlePagination(e.target.value)}>{item + 1}</button>
             </li>
           })}
         </ul>
       </div>
     )
   }
+
+    const debounce = (func) => {
+    let timer;
+    return function () {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            timer = null;
+            func();
+        }, 800);
+    }
+}
+
+const debouncedSearch = useCallback(debounce(request), [])
   return (
-
     <div className='container mx-auto min-h-screen '>
-
       <div className="row my-4 ">
-
         <div className="col-md-4">
           <img src="/logo.png" alt="" className="w-40 h-15" />
         </div>
-
         <div className="col-md-4 text-center">
           <h1 className='font-semibold text-2xl '> My Orders</h1>
         </div>
-
         <div className="col-md-4 relative">
           <div className=''>
             <div>
@@ -136,15 +133,17 @@ const Orders = () => {
             </div>
             <div className='text-right'>
               <label>&nbsp;</label>
-              <button className='btn btn-primary btn-sm h-8' onClick={refresClick}><IoMdRefreshCircle size={15} /></button>
+              <button className='btn btn-primary btn-sm h-8' onClick={() => {
+                query.search = ""
+                query.status = ""
+                setQuery(query)
+                request()
+              }}><IoMdRefreshCircle size={15} /></button>
             </div>
           </div>
         </div>
-
       </div>
-
       <div className="relative  shadow-md sm:rounded-lg">
-
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -175,7 +174,6 @@ const Orders = () => {
           {orders != undefined && orders.length > 0 &&
             orders.map((item, index) => {
               return product[index] != undefined ?
-              
                 <tbody key={item.id}>
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4">
@@ -222,7 +220,6 @@ export async function getServerSideProps(context) {
     const product = await knex("product").select("*").where({ id: i.productid })
     products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
   }
-  console.log(products);
   return {
     props: { orders: orders, product: products }
   }

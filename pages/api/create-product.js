@@ -19,7 +19,6 @@ const upload = multer({
 const handler = nc({
     onError: (err, req, res, next) => {
         // console.error(err.stack);
-        console.log(err.stack);
         res.status(500).end("Something broke!");
     },
     onNoMatch: (req, res) => {
@@ -28,7 +27,7 @@ const handler = nc({
 })
     .use(upload.single('image'))
     .post(async (req, res) => {
-        console.log(req.file);
+        // console.log(req.file);
         try {
             let insertData = req.body;
             insertData.image=`/products/${req.file.filename}`

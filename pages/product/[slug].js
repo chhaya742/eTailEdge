@@ -192,10 +192,7 @@ const Slug = ({ error, cart, addToCart, removeCart, buyNow, subtl, products, col
 export async function getServerSideProps(context) {
   let error = null
   let products = await knex("product").select("*").where({ slug: context.query.slug })
-  console.log(products)
   if (products.length < 1) {
-    console.log(products.length)
-    console.log(products)
     return {
       props: { error: 404 }
     }

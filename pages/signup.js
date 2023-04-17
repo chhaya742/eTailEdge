@@ -11,7 +11,6 @@ const Signup = () => {
 
   const request = async () => {
     const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/signup`, user)
-    console.log(data);
     if (data.status) {
       localStorage.setItem("token",data.data.token)
       localStorage.setItem("user",JSON.stringify(data.data))

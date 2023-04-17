@@ -4,11 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 var jwt = require('jsonwebtoken');
 const saltRounds = 10;
 export default async function handler(req, res) {
-    const slug = req.query.slug
-    console.log(slug);
-    let orderid = Math.floor(10000000 + Math.random() * 90000000);
-
-    const paginateCourseTotal = async (searchFrom, search, status) => {
+    const paginateTotal = async (searchFrom, search, status) => {
         let results = knex("orders")
         let total = 0
         if (status != undefined && status != "") {
@@ -22,12 +18,10 @@ export default async function handler(req, res) {
                 })
             }
         })
-        console.log(results);
         total = await results.count("id as total").first()
-        console.log(total);
         return total
     }
-    const paginateCourse = (limit, offset, searchFrom, status, sort, search, order) => {
+    const paginate = (limit, offset, searchFrom, status, sort, search, order) => {
         let rows = knex("orders")
         if (status != undefined && status != "") {
             rows.where('status', `${status}`)
@@ -44,6 +38,10 @@ export default async function handler(req, res) {
 
         return rows
     }
+
+    const slug = req.query.slug
+    let orderid = Math.floor(10000000 + Math.random() * 90000000);
+
     if (slug == "order") {
 
         const addressData = {
@@ -72,81 +70,58 @@ export default async function handler(req, res) {
         }
     }
     if (slug == "orders") {
-        let { offset = 0, limit = 10, order = "asc", sort = "id", search } = req.body;
-        let results = knex("orders")
-        // console.log(search);
-        results = results.where(function () {
-            if (search != undefined && search != "") {
-                // this.orWhereILike("id ", `%${search}%`)
-                this.orWhereILike("orderId", `%${search}%`)
-                // this.orWhereILike("status", `%${search}%`)
+        try {
+            let { offset = 0, limit = 10, order = "asc", sort = "id", search, status } = req.body;
+            let searchFrom = [
+                "orderId",
+                "status"
+            ]
+            const total = await paginateTotal(searchFrom, search, status)
+
+            const rows = await paginate(limit, offset, searchFrom, status, sort, search, order)
+            // rows = rows.map(row => {
+            //     row.image = constants.getStaticUrl(row.image)
+            //     return row
+            // })
+            let data_rows = [];
+            if (order === "asc") {
+
+                let sr = total.total - (limit * offset)
+                await rows.forEach(row => {
+                    row.sr = sr;
+                    data_rows.push(row);
+                    sr--;
+                });
+            } else {
+                let sr = offset + 1;
+                await rows.forEach(row => {
+                    row.sr = sr;
+                    data_rows.push(row);
+                    sr++;
+                });
             }
-        })
-
-        let total = await knex.count("id").from('orders').first();
-        // console.log(Object.values(total)[0]);
-        // total = await results.select(knex.raw('count(*) as total, status')).first() 
-
-        let rows = knex("orders")
-
-        rows = rows.where(function () {
-            if (search != undefined && search != "") {
-                this.orWhereILike("orderId", `%${search}%`)
-
-                // this.orWhereILike("status", `%${search}%`)
-                this.orWhereILike("id", `%${search}%`)
-            }
-        })
-
-
-        if (order === null || order === "") {
-            order = "id"
-        }
-        rows = await rows.orderBy(sort, order).limit(limit).offset(offset)
-
-console.log(rows);
-        let data_rows = [];
-        // let products = [];
-        if (order === "desc") {
-            let sr = offset + 1;
-            await rows.forEach(row => {
-                row.sr = sr;
-                delete row.password;
-                data_rows.push(row);
-                sr++;
+            console.log("data_rows",data_rows);
+            res.status(200).json({
+                error: false,
+                message: "orders received successfully.",
+                data: {
+                    rows: data_rows,
+                    total
+                }
             });
-        } else {
-            let sr = Object.values(total)[0] - (limit * offset)
-            await rows.forEach(row => {
-                row.sr = sr;
-                delete row.password;
-                data_rows.push(row);
-                sr--;
-            });
+            res.end()
+        } catch (e) {
+            // console.log(e)
+            res.json({ error: true, message: "Something went wrong", data: e })
         }
-        // console.log(data_rows);
-        // for (let i of data_rows) {
-        //     const product = await knex("product").select("*").where({ id: i.productid })
-        //     products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
-        // }
-        total = (Object.values(total)[0] != undefined) ? Object.values(total)[0] : 0;
-
-
-        res.status(200).json({
-            status: true,
-            message: "Orders retrieved successfully.",
-            total: total,
-            data: { rows: data_rows }
-        });
-
+        res.end()                              
 
     }
 
     if (slug == "get-order") {
-        let { offset = 0, limit = 10, order = "asc", sort = "id", search,token } = req.body;
- ;
-        const data=jwt.verify(token,process.env.NEXT_PUBLIC_jwtprivateKey)
-        console.log("token",data)
+        let { offset = 0, limit = 10, order = "asc", sort = "id", search, token } = req.body;
+        ;
+        const data = jwt.verify(token, process.env.NEXT_PUBLIC_jwtprivateKey)
         let results = knex("orders")
         // console.log(search);
         results = results.where(function () {
@@ -158,8 +133,6 @@ console.log(rows);
         })
 
         let total = await knex.count("id").from('orders').first();
-        // console.log(Object.values(total)[0]);
-        // total = await results.select(knex.raw('count(*) as total, status')).first() 
 
         let rows = knex("orders")
 
@@ -233,4 +206,6 @@ console.log(rows);
         //         res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         //     }
     }
+
+    
 }

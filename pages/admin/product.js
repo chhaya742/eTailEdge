@@ -1,5 +1,5 @@
 import DataTable from 'react-data-table-component'
-import { useState, useEffect } from "react"
+import { useState, useEffect ,useCallback} from "react"
 import { Table, Modal, ModalBody, ModalHeader, ModalFooter, Form, Input, Button, Label, CardHeader, Badge, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import ReactPaginate from 'react-paginate'
 import axios from 'axios'
@@ -69,6 +69,19 @@ const Listing = () => {
   useEffect(() => {
     request()
   }, [])
+
+  const debounce = (func) => {
+    let timer;
+    return function () {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            timer = null;
+            func();
+        }, 800);
+    }
+}
+
+const debouncedSearch = useCallback(debounce(request), [])
 
   const basicColumns = [
     {
@@ -224,7 +237,6 @@ const [image, setimage] = useState(null)
     // }
     // console.log('formData', formData);
     const onSubmit = e => {
-      console.log('formData', formData);
       if (formData) {
         const options = {
           url: "http://localhost:3000/api/create-product",
@@ -336,7 +348,6 @@ const [image, setimage] = useState(null)
                     <input type="file" name="image" onChange={e => {
                       setimage( e.target.files[0])
                       setForm({ ...formData, image: e.target.files[0] })
-                      console.log("formData.image ",formData.image.name );
                     }} className='form-control' placeholder='Short Name' required />
                   </div>
                   {image  && <img src={`/${image.name}`} width={100} height={50} />}
@@ -554,8 +565,6 @@ const [image, setimage] = useState(null)
       buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
-        console.log(result.value);
-        console.log(row.id);
         axios.post("http://localhost:3000/api/product/delete-product", { id: row.id }).then(res => {
           if (res.data.error) {
             const resMessage = res.data.message
@@ -614,14 +623,21 @@ const [image, setimage] = useState(null)
                           <input type="text" name="" className='form-control mr-2' id="" placeholder='Search' onChange={e => {
                             query.search = e.target.value
                             setQuery(query)
-                            request()
+                            debouncedSearch()
+                            // request()
                           }} />
                         </div>
                       </div>
                       <div className="col-md-3">
                         <div className="form-group">
                           <label>&nbsp;</label>
-                          <button className='btn btn-primary btn-sm form-control bg-pink-600' onClick={request}><RefreshCw size={15} /></button>
+                          <button className='btn btn-primary btn-sm form-control bg-pink-600' onClick={() => {
+                            query.search = ""
+                            query.status = ""
+                            // query.limit=25
+                            setQuery(query)
+                            request()
+                        }}><RefreshCw size={15} /></button>
                         </div>
                       </div>
                     </div>

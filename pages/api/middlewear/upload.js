@@ -5,7 +5,7 @@ export default async function handler(req, res,next) {
     }
 
     const filess = req.files.image;
-    console.log(filess);
+    // console.log(filess);
     const uploadPath = path.join(__dirname, "..", '/uploads/', filess.name);
     const fileName = '/uploads/'+ filess.name; 
     res.filepath = fileName 
