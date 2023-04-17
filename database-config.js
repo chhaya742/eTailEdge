@@ -6,11 +6,11 @@ if (mode == "live") {
         client: 'mysql',
         connection: {
             ssl: {},
-            host: "aws.connect.psdb.cloud",
+            host: "",
             port: "3306",
             database: "codeswear",
-            username: "8i89omx0p5ihdh7st9xv",
-            password: "pscale_pw_uxQONOyFx8snClOLWBErXjUUf269Py8wHV2j02lBJeK"
+            username: "",
+            password: ""
         }
     }
 } else {
