@@ -36,7 +36,7 @@ const Listing = () => {
     order: 'desc',
     sort: 'id',
     status: "",
-    token:""
+    token: ""
   })
 
   const handleFirstCharUpper = (e) => {
@@ -49,8 +49,9 @@ const Listing = () => {
     2: { title: 'Inactive', color: 'light-danger' }
   }
 
-  const request = (token,reset_offset = true) => {
-    query.token=token
+  const request = (token, reset_offset = true) => {
+
+    query.token = token
     setQuery(query)
     if (reset_offset) {
       query.offset = 0
@@ -65,44 +66,82 @@ const Listing = () => {
         }
         return toast.error(resMessage)
       }
-      setTotal(res.data.data.total.total)
+      for (let i = 0; i < res.data.data.products.length; i++) {
+        const product = res.data.data.products[i];
+        const order = res.data.data.rows[i];
+        if (product.id == order.productid) {
+          console.log("product", product.id);
+          res.data.data.rows[i]["product"] = product
+        }
+      }
+      setTotal(res.data.data.total)
       setData(res.data.data.rows)
     })
   }
 
   useEffect(() => {
+    console.log("token", localStorage.getItem("token"));
     request(localStorage.getItem("token"))
   }, [])
 
   const basicColumns = [
     {
       name: 'Sr.',
-      maxWidth: '150px',
+      maxWidth: '100px',
       column: "id",
       sortable: true,
       selector: row => row.sr
     },
     {
-      name: 'Title',
-      maxWidth: '350px',
-      selector: row => row.title
+      name: 'Order ID',
+      maxWidth: '150px',
+      selector: row => row.orderId
     },
     {
-      name: 'Slug',
-      maxWidth: '350px',
-      selector: row => row.slug
+      name: 'Color',
+      maxWidth: '150px',
+      selector: row => row.product.color
+    },
+    {
+      name: 'Category',
+      maxWidth: '150px',
+      selector: row => row.product.category
+    },
+    {
+      name: 'Product Name',
+      maxWidth: '700px',
+      selector: row => row.product.title
     },
     {
       name: 'Image',
-      maxWidth: '350px',
+      maxWidth: '100px',
       selector: row => {
-        return( <img src={row.image} width={34} height={34}/>)
-        }
+        return (<img src={row.product.image} width={34} height={34} />)
+      }
+    },
+    {
+      name: 'Price',
+      maxWidth: '100px',
+      selector: row => row.product.price
     },
     {
       name: 'Status',
-      maxWidth: '200px',
-      selector: row => row.status,
+      maxWidth: '150px',
+      selector: row => {
+        return (<center>
+          {row.status == 'pending' && < Badge color="#879193" pill style={{ background: "#879193" }}>{row.status ? row.status : "N/A"} </Badge >}
+          {row.status == 'completed' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}>{row.status ? row.status : "N/A"} </Badge >}
+          {row.status == 'Cancelled' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}> {row.status ? row.status : "N/A"}
+          </Badge >}
+          {row.status == 'Refunded' && < Badge color="#FCCB05" pill style={{ background: "#FCCB05" }}> {row.status ? row.status : "N/A"}
+          </Badge >}
+          {row.status == 'delivered' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}> {row.status ? row.status : "N/A"}
+          </Badge >}
+          {row.status == 'Shipped' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}> {row.status ? row.status : "N/A"}
+          </Badge >}
+        </center>)
+      }
+
       // cell: row => {
       //   return (
       //     <Badge color={status[row.status].color} pill>
@@ -213,7 +252,7 @@ const Listing = () => {
       status: "1"
     })
 
-const [image, setimage] = useState(null)
+    const [image, setimage] = useState(null)
     // let formdata = {
     //   title: form.title,
     //   slug:form.slug,
@@ -228,7 +267,6 @@ const [image, setimage] = useState(null)
     // }
     // console.log('formData', formData);
     const onSubmit = e => {
-      console.log('formData', formData);
       if (formData) {
         const options = {
           url: "http://localhost:3000/api/create-product",
@@ -238,21 +276,21 @@ const [image, setimage] = useState(null)
           },
           data: formData
         };
-  
+
         axios(options)
-        .then((response) => {
-        if (res.data.error) {
-          const resMessage = res.data.message
-          if (Array.isArray(resMessage)) {
-            return toast.error(resMessage[0])
-          }
-          return toast.error(resMessage)
-        }
-        request()
-        setEditModal(false)
-        return toast.success(res.data.message)
-      })
-    }
+          .then((response) => {
+            if (res.data.error) {
+              const resMessage = res.data.message
+              if (Array.isArray(resMessage)) {
+                return toast.error(resMessage[0])
+              }
+              return toast.error(resMessage)
+            }
+            request()
+            setEditModal(false)
+            return toast.success(res.data.message)
+          })
+      }
     }
     return (
       <div className='vertically-centered-modal'>
@@ -338,12 +376,11 @@ const [image, setimage] = useState(null)
                   <div className="form-group">
                     <label>Image <span className='text-danger'>*</span></label>
                     <input type="file" name="image" onChange={e => {
-                      setimage( e.target.files[0])
+                      setimage(e.target.files[0])
                       setForm({ ...formData, image: e.target.files[0] })
-                      console.log("formData.image ",formData.image.name );
                     }} className='form-control' placeholder='Short Name' required />
                   </div>
-                  {image  && <img src={`/${image.name}`} width={100} height={50} />}
+                  {image && <img src={`/${image.name}`} width={100} height={50} />}
                 </div>
                 <div className="col-md-12 mt-1">
                   <div className="form-control" style={{ border: "0px" }}>
@@ -558,8 +595,6 @@ const [image, setimage] = useState(null)
       buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
-        console.log(result.value);
-        console.log(row.id);
         axios.post("http://localhost:3000/api/product/delete-product", { id: row.id }).then(res => {
           if (res.data.error) {
             const resMessage = res.data.message
@@ -597,7 +632,7 @@ const [image, setimage] = useState(null)
             <AddModal />
             <div className="card-body">
               <div className="d-flex justify-content-between align-center">
-                <h4>Products</h4>
+                <h4>Orders</h4>
                 <div className='bg-pink-600'>
 
                   <Button color='primary' size='sm' onClick={() => setAddModal(!addModal)}>Create</Button>
