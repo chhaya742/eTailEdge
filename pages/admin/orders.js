@@ -129,13 +129,14 @@ const Listing = () => {
       maxWidth: '150px',
       selector: row => {
         return (<center>
-          {row.status == 'pending' && < Badge color="#879193" pill style={{ background: "#879193" }}>{row.status ? row.status : "N/A"} </Badge >}
-          {row.status == 'completed' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}>{row.status ? row.status : "N/A"} </Badge >}
-          {row.status == 'Cancelled' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}> {row.status ? row.status : "N/A"}
+        
+          {row.status == 'Pending' && < Badge color="#879193" pill style={{ background: "#879193" }}>{row.status ? row.status : "N/A"} </Badge >}
+          {row.status == 'Completed' && < Badge color="#08aeea" pill style={{ background: "#08aeea" }}>{row.status ? row.status : "N/A"} </Badge >}
+          {row.status == 'Cancelled' && < Badge color="red" pill style={{ background: "red" }}> {row.status ? row.status : "N/A"}
           </Badge >}
           {row.status == 'Refunded' && < Badge color="#FCCB05" pill style={{ background: "#FCCB05" }}> {row.status ? row.status : "N/A"}
           </Badge >}
-          {row.status == 'delivered' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}> {row.status ? row.status : "N/A"}
+          {row.status == 'Delivered' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}> {row.status ? row.status : "N/A"}
           </Badge >}
           {row.status == 'Shipped' && < Badge color="#BDDF57" pill style={{ background: "#BDDF57" }}> {row.status ? row.status : "N/A"}
           </Badge >}

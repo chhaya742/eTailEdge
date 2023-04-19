@@ -16,7 +16,7 @@ export default function Home() {
       </Head>
       <main >
         <div className='container mx-auto'>
-          <img className="w-full  h-full w-100" src="/banner-img-3.jpg" alt='eTailEdge' />
+          <img className="w-full  h-full w-100" src="/banner.png" alt='eTailEdge' />
         </div>
         <div>
           <section className="text-gray-600 body-font">

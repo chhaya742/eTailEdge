@@ -7,6 +7,7 @@ const Tshirts = ({ products, addToCart }) => {
   // console.log("products",products);
   const router = useRouter()
   const { slug } = router.query
+
   return (
     <div>
       <section className="text-gray-600 body-font">
@@ -15,14 +16,14 @@ const Tshirts = ({ products, addToCart }) => {
             {Object.keys(products).length === 0 && <p>{`Sorry all the ${slug} are currently out of stock. New stock comming soon Stay Tuned`} </p>}
             {Object.keys(products).map((item) => {
               return <div key={products[item].id} className="lg:w-1/6 md:w-1/2 p-4 w-full shadow-sm m-5">
-             
+
                 <Link passHref={true} href={`/product/${products[item].slug}`} legacyBehavior>
                   <a className="block relative  rounded overflow-hidden">
                     <img alt="ecommerce" className="h-[30vh] md:h-[34vh] m-auto " src={products[item].image} />
                   </a>
                 </Link>
                 <div className="mt-4 text-left">
-                
+
                   <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category}</h3>
                   <h2 className="text-gray-900 title-font text-lg font-medium">{products[item].title}</h2>
 
@@ -53,11 +54,11 @@ const Tshirts = ({ products, addToCart }) => {
                     {products[item].color.includes("pink") && <button className="border-2 border-gray-300 ml-1 bg-pink-200 rounded-full w-6 h-6 focus:outline-none"></button>}
                     {products[item].color.includes("purpel") && <button className="border-2 border-gray-300 ml-1  bg-purple-500 rounded-full w-6 h-6 focus:outline-none"></button>}
                     {products[item].color.includes("orange") && <button className="border-2 border-gray-300 ml-1 bg-orange-500 rounded-full w-6 h-6 focus:outline-none"></button>}
-                    <div className='absolute  right-0'><AiOutlineShoppingCart className='text-3xl' onClick={() => addToCart(products[item].slug, products[item].id,1, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} /></div>
+                    <div className='absolute  right-0'><AiOutlineShoppingCart className='text-3xl' onClick={() => addToCart(products[item].slug, products[item].id, 1, products[item].price, products[item].size, `${products[item].title}(${products[item].size}/${products[item].color})`, products[item].color)} /></div>
                   </div>
 
                 </div>
-                
+
               </div>
             })}
           </div>
@@ -77,7 +78,7 @@ export async function getServerSideProps(context) {
   let tshirts = {}
   for (let item of products) {
     if (item.title in tshirts) {
-   
+
       if (!tshirts[item.title].color.includes(item.color) && item.availableqyt > 0) {
         tshirts[item.title].color.push(item.color)
       }

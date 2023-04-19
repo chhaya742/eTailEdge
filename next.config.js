@@ -8,7 +8,10 @@ const nextConfig = {
         destination: 'http://localhost:3000'
       }
     ]
-  }
+  },
+  // experimental:{
+  //   appDir: true
+  // }
 }
 
 module.exports = nextConfig

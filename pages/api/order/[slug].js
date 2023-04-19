@@ -119,9 +119,10 @@ export default async function handler(req, res) {
     }
 
     if (slug == "get-order") {
-        let { offset = 0, limit = 10, order = "asc", sort = "id", search, token } = req.body;
-        ;
-        const data = jwt.verify(token, process.env.NEXT_PUBLIC_jwtprivateKey)
+        let { offset = 0, limit = 10, order = "asc", sort = "id", search, token } = req.params;
+        
+        // const data = jwt.verify(token, process.env.NEXT_PUBLIC_jwtprivateKey)
+      
         let results = knex("orders")
         // console.log(search);
         results = results.where(function () {
@@ -151,7 +152,7 @@ export default async function handler(req, res) {
         }
         rows = await rows.orderBy(sort, order).limit(limit).offset(offset)
 
-
+  console.log("row",rows);
         let data_rows = [];
         let products = [];
         if (order === "desc") {
@@ -171,14 +172,14 @@ export default async function handler(req, res) {
                 sr--;
             });
         }
-        // console.log(data_rows);
+      
         for (let i of data_rows) {
             const product = await knex("product").select("*").where({ id: i.productid })
             products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
         }
         total = (Object.values(total)[0] != undefined) ? Object.values(total)[0] : 0;
 
-
+console.log("data_rows",data_rows);
         res.status(200).json({
             status: true,
             message: "Orders retrieved successfully.",
