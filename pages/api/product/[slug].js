@@ -70,7 +70,7 @@ export default async function handler(req, res) {
     if (slug == "products") {
         try {
 
-            let { offset = 0, limit = 10, order = "asc", sort = "id", search, status } = req.body;
+            let { offset = 0, limit, order = "asc", sort = "id", search, status } = req.body;
 
             let searchFrom = [
                 "title",

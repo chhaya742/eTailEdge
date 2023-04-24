@@ -83,7 +83,6 @@ const Checkout = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
         } else {
           setstate('')
           setcity('')
-
         }
       } else {
         setstate('')

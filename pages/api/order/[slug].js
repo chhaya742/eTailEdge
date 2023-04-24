@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     let orderid = Math.floor(10000000 + Math.random() * 90000000);
 
     if (slug == "order") {
-
+      
         const addressData = {
             userid: req.body.userid,
             address: req.body.address,
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
             city: req.body.city,
             pin: req.body.pin
         }
-
+        console.log("*********************#################", addressData);
         try {
             let address = await knex("address").insert(addressData)
             const order = {
@@ -60,6 +60,7 @@ export default async function handler(req, res) {
                 productid: req.body.productid,
                 address: address[0],
                 amount: req.body.amount,
+                status: "Pending"
             }
             let orders = await knex("orders").insert(order)
             let orderId = await knex("orders").select("orderId").where({ id: orders[0] })
@@ -84,6 +85,7 @@ export default async function handler(req, res) {
             //     return row
             // })
             let data_rows = [];
+            let products = [];
             if (order === "asc") {
 
                 let sr = total.total - (limit * offset)
@@ -100,13 +102,17 @@ export default async function handler(req, res) {
                     sr++;
                 });
             }
-            console.log("data_rows",data_rows);
+            for (let i of data_rows) {
+                const product = await knex("product").select("*").where({ id: i.productid })
+                products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
+            }
+            // console.log("product", products);
             res.status(200).json({
                 error: false,
                 message: "orders received successfully.",
                 data: {
-                    rows: data_rows,
-                    total
+                    total,
+                    data: { rows: data_rows, products: products }
                 }
             });
             res.end()
@@ -114,15 +120,15 @@ export default async function handler(req, res) {
             // console.log(e)
             res.json({ error: true, message: "Something went wrong", data: e })
         }
-        res.end()                              
+        res.end()
 
     }
 
     if (slug == "get-order") {
         let { offset = 0, limit = 10, order = "asc", sort = "id", search, token } = req.params;
-        
+
         // const data = jwt.verify(token, process.env.NEXT_PUBLIC_jwtprivateKey)
-      
+
         let results = knex("orders")
         // console.log(search);
         results = results.where(function () {
@@ -152,7 +158,7 @@ export default async function handler(req, res) {
         }
         rows = await rows.orderBy(sort, order).limit(limit).offset(offset)
 
-  console.log("row",rows);
+        console.log("row", rows);
         let data_rows = [];
         let products = [];
         if (order === "desc") {
@@ -172,14 +178,14 @@ export default async function handler(req, res) {
                 sr--;
             });
         }
-      
+
         for (let i of data_rows) {
             const product = await knex("product").select("*").where({ id: i.productid })
             products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
         }
         total = (Object.values(total)[0] != undefined) ? Object.values(total)[0] : 0;
 
-console.log("data_rows",data_rows);
+        console.log("data_rows", data_rows);
         res.status(200).json({
             status: true,
             message: "Orders retrieved successfully.",
@@ -207,6 +213,28 @@ console.log("data_rows",data_rows);
         //         res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         //     }
     }
+    if (slug == "order-product") {
+        const inputData = req.body
+        const id = req.body.id
+        try {
+            const data = await knex("orders").update(inputData).where({ "id": id })
+            res.status(200).json({ status: true, message: "order update successfully ", data: data })
+        } catch (error) {
+            res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
+        }
+    }
 
-    
+    if (slug == "delete-order") {
+        // console.log("chhaya");
+        const id = req.body.id
+        // console.log(id);
+        try {
+            const data = await knex("orders").delete().where({ "id": id })
+            res.status(200).json({ status: true, message: "order delete successfully ", data: data })
+        } catch (error) {
+            console.log(error);
+            res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
+        }
+    }
+
 }
