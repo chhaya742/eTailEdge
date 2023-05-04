@@ -87,4 +87,15 @@ export default async function handler(req, res) {
         }
         res.end()
     }
+    if (slug == "user-update") {
+        const inputData = req.body
+        console.log("inputData",inputData);
+        const id = req.body.id
+        try {
+            const data = await knex("user").update(inputData).where({ "id": id })
+            res.status(200).json({ status: true, message: "user Deactivate successfully ", data: data })
+        } catch (error) {
+            res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
+        }
+    }
 }

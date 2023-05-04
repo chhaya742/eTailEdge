@@ -21,12 +21,16 @@ export default async function handler(req, res) {
         total = await results.count("id as total").first()
         return total
     }
-    const paginate = (limit, offset, searchFrom, status, sort, search, order) => {
+    const paginate = (limit, offset, searchFrom, status, sort, search, order,userid) => {
         let rows = knex("orders")
         if (status != undefined && status != "") {
             rows.where('status', `${status}`)
+            rows.where('userid', `${userid}`)
         }
-
+        if (userid != undefined && userid != "") {
+      
+            rows.where('userid', `${userid}`)
+        }
         rows = rows.where((query) => {
             if (search) {
                 searchFrom.map(val => {
@@ -86,6 +90,8 @@ export default async function handler(req, res) {
             // })
             let data_rows = [];
             let products = [];
+            let address = [];
+            let user = [];
             if (order === "asc") {
 
                 let sr = total.total - (limit * offset)
@@ -106,13 +112,22 @@ export default async function handler(req, res) {
                 const product = await knex("product").select("*").where({ id: i.productid })
                 products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
             }
-            // console.log("product", products);
+            for (let i of data_rows) {
+                const addressdata = await knex("address").select("*").where({ id: i.address })
+                address.push(Object.values(JSON.parse(JSON.stringify(addressdata)))[0]);
+            }
+            for (let i of data_rows) {
+                const userdata = await knex("user").select("*").where({ id: i.userid })
+                // console.log("userdata", Object.values(JSON.parse(JSON.stringify(userdata)))[0]);
+                user.push(Object.values(JSON.parse(JSON.stringify(userdata)))[0]);
+            }
+         
             res.status(200).json({
                 error: false,
                 message: "orders received successfully.",
                 data: {
                     total,
-                    data: { rows: data_rows, products: products }
+                    data: { rows: data_rows, products: products, address:address, user:user }
                 }
             });
             res.end()
@@ -124,8 +139,8 @@ export default async function handler(req, res) {
 
     }
 
-    if (slug == "get-order") {
-        let { offset = 0, limit = 10, order = "asc", sort = "id", search, token } = req.params;
+    if (slug == "get-order1111") {
+        let { offset, limit = 10, order = "asc", sort = "id", search, token } = req.params;
 
         // const data = jwt.verify(token, process.env.NEXT_PUBLIC_jwtprivateKey)
 
@@ -213,11 +228,108 @@ export default async function handler(req, res) {
         //         res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
         //     }
     }
-    if (slug == "order-product") {
+     if (slug == "get-order") {
+        try {
+            let { offset = 0, limit = 10, order = "asc", sort = "id", search, status ,token} = req.body;
+            const data = jwt.verify(token, process.env.NEXT_PUBLIC_jwtprivateKey)
+            let searchFrom = [
+                "orderId",
+                "status"
+            ]
+            console.log(data.user.id);
+            const total = await paginateTotal(searchFrom, search, status)
+
+            const rows = await paginate(limit, offset, searchFrom, status, sort, search, order,data?.user.id)
+            // rows = rows.map(row => {
+            //     row.image = constants.getStaticUrl(row.image)
+            //     return row
+            // })
+            let data_rows = [];
+            let products = [];
+            let address = [];
+            if (order === "asc") {
+
+                let sr = total.total - (limit * offset)
+                await rows.forEach(row => {
+                    row.sr = sr;
+                    data_rows.push(row);
+                    sr--;
+                });
+            } else {
+                let sr = offset + 1;
+                await rows.forEach(row => {
+                    row.sr = sr;
+                    data_rows.push(row);
+                    sr++;
+                });
+            }
+            for (let i of data_rows) {
+                const product = await knex("product").select("*").where({ id: i.productid })
+                products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
+            }
+            for (let i of data_rows) {
+                const addressdata = await knex("address").select("*").where({ id: i.address })
+                address.push(Object.values(JSON.parse(JSON.stringify(addressdata)))[0]);
+            }
+         
+            res.status(200).json({
+                error: false,
+                message: "orders received successfully.",
+                data: {
+                    total,
+                    data: { rows: data_rows, products: products, address:address}
+                }
+            });
+            res.end()
+        } catch (e) {
+            // console.log(e)
+            res.json({ error: true, message: "Something went wrong", data: e })
+        }
+        res.end()
+
+        // console.log(auth);
+        //     let products = [];
+        //     try {
+        //         const data = jwt.verify(req.body.token, process.env.NEXT_PUBLIC_jwtprivateKey)
+        //         let orders = await knex("orders").select("*").where({ userid: data.user.id })
+        //         orders = JSON.parse(JSON.stringify(orders))
+
+        // for (let i of orders) {
+        //     const product = await knex("product").select("*").where({ id: i.productid })
+        //     products.push(Object.values(JSON.parse(JSON.stringify(product)))[0]);
+        // }
+
+        //         res.status(200).json({ status: true, message: "orders fetch  successfully", data: { products: products, orders: orders } })
+        //     } catch (error) {
+        //         console.log(error);
+        //         res.status(200).json({ status: false, message: error.sqlMessage, data: [] })
+        //     }
+    }
+    if (slug == "order-update") {
         const inputData = req.body
         const id = req.body.id
+        const addressid=req.body.addressid
+
+        const addressData = {
+            userid: req.body.userid,
+            address: req.body.address,
+            state: req.body.state,
+            city: req.body.city,
+            pin: req.body.pin
+        }
+       
+        const order = {
+            orderId: req.body.orderid,
+            userid: req.body.userid,
+            productid: req.body.productid,
+            address:addressid,
+            amount: req.body.amount,
+            status: req.body.status
+        }
+       
         try {
-            const data = await knex("orders").update(inputData).where({ "id": id })
+            let address = await knex("address").update(addressData).where({ "id": addressid })
+            const data = await knex("orders").update(order).where({ "id": id })
             res.status(200).json({ status: true, message: "order update successfully ", data: data })
         } catch (error) {
             res.status(200).json({ status: false, message: error.sqlMessage, data: [] })

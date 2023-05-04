@@ -1,11 +1,12 @@
 import Head from 'next/head'
-import { Inter } from '@next/font/google'
-
-
-
-const inter = Inter({ subsets: ['latin'] })
-
+import MySlider from '../components/MySlider'
+import { useDispatch } from 'react-redux'
+import {incNumber,decNumber  } from '../src/redux/counter';
 export default function Home() {
+
+  // const myState = useSelector((state) => { state.changeTheNumber })
+  const dispatch = useDispatch()
+  // console.log("myState", myState);
   return (
     <>
       <Head>
@@ -16,9 +17,19 @@ export default function Home() {
         <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </Head>
-      <main >
+      <main className='bg-slate-200' >
+        <div className='container'>
+          <h2>Increment /decrement counter</h2>
+          <div className='quantity m-3'>
+            <button type="button" className="btn btn-info" onClick={()=>dispatch(decNumber())}>-</button>
+            <input name="quantity" type='text' className='text-center' value={myState} />
+            <button type="button" className="btn btn-info" onClick={()=>dispatch(incNumber())}>+</button>
+
+          </div>
+        </div>
         <div className='container mx-auto'>
-          <img className="w-full  h-full w-100" src="/banner.png" alt='eTailEdge' />
+          <MySlider />
+          {  /*<img className="w-full  h-full w-100" src="/banner.png" alt='eTailEdge' />*/}
         </div>
         <div>
           <section className="text-gray-600 body-font">
@@ -98,7 +109,6 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-
             </div>
           </section>
         </div>

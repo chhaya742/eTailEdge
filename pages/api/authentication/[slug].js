@@ -1,7 +1,7 @@
 var express = require('express');
 const app = express();
 var router = express.Router();
-
+// import varifyToken from '../auth/[...nextauth]'
 
 var nodemailer = require('nodemailer');
 var randtoken = require('rand-token');
@@ -35,6 +35,7 @@ export default async function handler(req, res, next) {
         }
     }
     if (slug == "login") {
+        // console.log("varifyToken",varifyToken);
         try {
             const data = await knex("user").select("*").where({ email: req.body.email })
             if (data.length > 0) {

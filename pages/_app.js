@@ -7,15 +7,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingBar from 'react-top-loading-bar'
 import { useRouter } from "next/router";
-// import theme from "../src/theme/theme";
-// import Head from 'next/head'
-// import { Provider } from "react-redux";
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-// import { MuiThemeProvider } from "@material-ui/core/styles";
-// import CssBaseline from "@material-ui/core/CssBaseline";
-// import store from "@redux/store";  
+import store from '../src/redux/store'
+import { Provider } from "react-redux"
 export default function App({ Component, pageProps }) {
+
   const [progress, setProgress] = useState(0)
   let router = useRouter();
   const [cart, setCart] = useState({})
@@ -121,35 +116,27 @@ export default function App({ Component, pageProps }) {
 
 
   }
-  // console.log("subtotal",total);
-  return <>
-    <LoadingBar
-      color='#ff2d55'
-      progress={progress}
-      waitingTime={300}
-      onLoaderFinished={() => setProgress(0)}
-    />
 
-    <NavBar logout={logout} buyNow={buyNow} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
 
-    <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
-    <ToastContainer position="top-center" autoClose={1000} pauseOnHover={false} />
-{/*<Head>
-  <link rel="shortcut icon" href="#" />
-  <meta charSet="utf-8" />
-  <meta
-    name="viewport"
-    content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-  />
-  <meta name="theme-color" content={theme.palette.primary.main} />
-</Head>
-    <Provider>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </MuiThemeProvider>
+
+  return (
+
+    <Provider store={store}>
+      <LoadingBar
+        color='#ff2d55'
+        progress={progress}
+        waitingTime={300}
+        onLoaderFinished={() => setProgress(0)}
+      />
+
+      <NavBar logout={logout} buyNow={buyNow} user={user} key={key} cart={cart} addToCart={addToCart} removeCart={removeFromCart} clearCart={clearCart} subtl={total} />
+
+      <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeCart={removeFromCart} clearCart={clearCart} subtl={total} {...pageProps} />
+      <ToastContainer position="top-center" autoClose={1000} pauseOnHover={false} />
+
+      <Footer />
     </Provider>
-    */}
-    <Footer />
-  </>
+
+
+  )
 }

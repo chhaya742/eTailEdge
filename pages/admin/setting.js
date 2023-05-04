@@ -11,7 +11,7 @@ const AllProducts = () => {
      }
       `}</style>
     <FullLayout>
-    <div>AllProducts</div>
+    <div>Setting</div>
     </FullLayout>
     </ThemeProvider>
  

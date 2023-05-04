@@ -25,6 +25,7 @@ const Listing = () => {
   const [total, setTotal] = useState(null)
   const [userData, setUserData] = useState(null)
   const [productData, setProductData] = useState(null)
+  const [statusData, setStatusData] = useState([{ value: "Completed", label: "Completed" }, { value: "Pending", label: "Pending" }, { value: "Cancelled", label: "Cancelled" }, { value: "Pending", label: "Pending" }, { value: "Shipped", label: "Shipped" }, { value: "Refunded", label: "Refunded" }])
   const [query, setQuery] = useState({
     offset: 0,
     limit: 25,
@@ -79,6 +80,22 @@ const Listing = () => {
         if (product.id == order.productid) {
 
           res.data.data.data.rows[i]["product"] = product
+        }
+      }
+      for (let i = 0; i < res.data.data.data.address.length; i++) {
+        const address = res.data.data.data.address[i];
+        const order = res.data.data.data.rows[i];
+        if (address.id == order.address) {
+
+          res.data.data.data.rows[i]["address"] = address
+        }
+      }
+      for (let i = 0; i < res.data.data.data.user.length; i++) {
+        const user = res.data.data.data.user[i];
+        const order = res.data.data.data.rows[i];
+        if (user.id == order.userid) {
+
+          res.data.data.data.rows[i]["user"] = user
         }
       }
       // console.log("product", res.data.data.total.total);
@@ -293,18 +310,18 @@ const Listing = () => {
       state: "",
       city: "",
       pin: "",
-      price: ""
+      amount: ""
     })
 
     const [image, setimage] = useState(null)
-    const onSubmit =async(e)=> {
+    const onSubmit = async (e) => {
       if (formData) {
         const { data } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, formData)
-         if (data) {
-            // request()
-            setEditModal(false)
-            return toast.success(res.data.message)
-          }
+        if (data) {
+          // request()
+          setEditModal(false)
+          return toast.success(res.data.message)
+        }
       }
     }
     return (
@@ -420,22 +437,26 @@ const Listing = () => {
   }
 
   const EditModal = () => {
-    console.log("editData",editData)
+    // console.log("editData",editData.user)
     const [form, setForm] = useState({
+      addressid: editData.address?.id,
+      id: editData.id,
+      orderid: editData.orderid,
       userid: editData.userid,
       productid: editData.productid,
-      address: editData.address,
-      state: editData.state,
-      city: editData.city,
-      pin: editData.pin,
-      price: editData.price,
-      status:editData.status
+      address: editData.address?.address,
+      state: editData.address?.state,
+      city: editData.address?.city,
+      pin: editData.address?.pin,
+      amount: editData.amount,
+      status: editData.status
     })
     // console.log(editData.image);
 
     const onSubmitEdit = e => {
       e.preventDefault()
-      axios.post("http://localhost:3000/api/order/update-order", form).then(res => {
+      console.log("form", form)
+      axios.post("http://localhost:3000/api/order/order-update", form).then(res => {
         if (res.data.error) {
           const resMessage = res.data.message
           if (Array.isArray(resMessage)) {
@@ -453,100 +474,121 @@ const Listing = () => {
         <Modal isOpen={editModal} toggle={() => setEditModal(!editModal)} className='modal-dialog-centered'>
           <ModalHeader toggle={() => setEditModal(!editModal)}>Edit Course</ModalHeader>
           <Form onSubmit={onSubmitEdit} id="form">
-          <ModalBody>
-          <div className="row">
-            <div className="col-md-12 me-1 mt-1">
+            <ModalBody>
+              <div className="row">
+                <div className="col-md-12 me-1 mt-1">
 
-              <div className="form-group ">
-                <div style={{ paddingBottom: "8px" }}>
-                  <label htmlFor="userid">User</label>
+                  <div className="form-group ">
+                    <div style={{ paddingBottom: "8px" }}>
+                      <label htmlFor="userid">User</label>
+                    </div>
+                    <Select
+                      className='react-select'
+                      classNamePrefix='select'
+                      defaultValue={{ value: form.userid, label: editData.user?.email }}
+                      name='userid'
+                      key={userData}
+                      options={userData}
+                      menuPlacement="auto"
+                      maxMenuHeight={250}
+                      onChange={(e) => {
+                        setForm({ ...form, userid: e.value })
+                      }}
+                      required
+                    />
+                  </div>
                 </div>
-                <Select
-                  className='react-select'
-                  classNamePrefix='select'
-                  defaultValue={{ value: "userid", label: "Select User" }}
-                  name='userid'
-                  key={userData}
-                  options={userData}
-                  menuPlacement="auto"
-                  maxMenuHeight={250}
-                  onChange={(e) => {
-                    setForm({ ...form, userid: e.value })
-                  }}
-                  required
-                />
-              </div>
-            </div>
-            <div className="col-md-12 me-1 mt-1">
-              <div className="form-group">
-                <div style={{ paddingBottom: "8px" }}>
-                  <label htmlFor="productid">Product</label>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <div style={{ paddingBottom: "8px" }}>
+                      <label htmlFor="productid">Product</label>
+                    </div>
+                    <Select
+                      className='react-select'
+                      classNamePrefix='select'
+                      defaultValue={{ value: form.productid, label: editData.product?.title }}
+                      name='productid'
+                      key={productData}
+                      options={productData}
+                      menuPlacement="auto"
+                      maxMenuHeight={250}
+                      onChange={(e) => {
+                        setForm({ ...form, productid: e.value })
+                      }}
+                      required
+                    />
+                  </div>
                 </div>
-                <Select
-                  className='react-select'
-                  classNamePrefix='select'
-                  defaultValue={{ value: "productid", label: "Select product" }}
-                  name='productid'
-                  key={productData}
-                  options={productData}
-                  menuPlacement="auto"
-                  maxMenuHeight={250}
-                  onChange={(e) => {
-                    setForm({ ...form, productid: e.value })
-                  }}
-                  required
-                />
+
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Address <span className='text-danger'>*</span></label>
+                    <input type="text" name="address" value={form.address} onChange={e => {
+                      setForm({ ...form, address: e.target.value })
+                    }} className='form-control' placeholder='Address' required />
+                  </div>
+                </div>
+
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>State <span className='text-danger'>*</span></label>
+                    <input type="text" name="state" value={form.state} onChange={e => {
+
+                      setForm({ ...form, state: e.target.value })
+                    }} className='form-control' placeholder='State' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>City <span className='text-danger'>*</span></label>
+                    <input type="text" name="city" value={form.city} onChange={e => {
+
+                      setForm({ ...form, city: e.target.value })
+                    }} className='form-control' placeholder='City' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Pin <span className='text-danger'>*</span></label>
+                    <input type="text" name="pin" value={form.pin} onChange={e => {
+
+                      setForm({ ...form, pin: e.target.value })
+                    }} className='form-control' placeholder='Pin' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <label>Price <span className='text-danger'>*</span></label>
+                    <input type="text" name="amount" value={form.amount} onChange={e => {
+
+                      setForm({ ...form, amount: e.target.value })
+                    }} className='form-control' placeholder='Price' required />
+                  </div>
+                </div>
+                <div className="col-md-12 me-1 mt-1">
+                  <div className="form-group">
+                    <div style={{ paddingBottom: "8px" }}>
+                      <label htmlFor="status">Status</label>
+                    </div>
+                    <Select
+                      className='react-select'
+                      classNamePrefix='select'
+                      defaultValue={{ value: form.status, label: form.status }}
+                      name='status'
+                      key={statusData}
+                      options={statusData}
+                      menuPlacement="auto"
+                      maxMenuHeight={250}
+                      onChange={(e) => {
+                        setForm({ ...form, status: e.value })
+                      }}
+                      required
+                    />
+                  </div>
+                </div>
+
               </div>
-            </div>
-
-            <div className="col-md-12 me-1 mt-1">
-              <div className="form-group">
-                <label>Address <span className='text-danger'>*</span></label>
-                <input type="text" name="address" value={form.address} onChange={e => {
-                  setForm({ ...form, address: e.target.value })
-                }} className='form-control' placeholder='Address' required />
-              </div>
-            </div>
-
-            <div className="col-md-12 me-1 mt-1">
-              <div className="form-group">
-                <label>State <span className='text-danger'>*</span></label>
-                <input type="text" name="state" value={form.state} onChange={e => {
-
-                  setForm({ ...form, state: e.target.value })
-                }} className='form-control' placeholder='State' required />
-              </div>
-            </div>
-            <div className="col-md-12 me-1 mt-1">
-              <div className="form-group">
-                <label>City <span className='text-danger'>*</span></label>
-                <input type="text" name="city" value={form.city} onChange={e => {
-
-                  setForm({ ...form, city: e.target.value })
-                }} className='form-control' placeholder='City' required />
-              </div>
-            </div>
-            <div className="col-md-12 me-1 mt-1">
-              <div className="form-group">
-                <label>Pin <span className='text-danger'>*</span></label>
-                <input type="text" name="pin" value={form.pin} onChange={e => {
-
-                  setForm({ ...form, pin: e.target.value })
-                }} className='form-control' placeholder='Pin' required />
-              </div>
-            </div>
-            <div className="col-md-12 me-1 mt-1">
-              <div className="form-group">
-                <label>Price <span className='text-danger'>*</span></label>
-                <input type="text" name="price" value={form.price} onChange={e => {
-
-                  setForm({ ...form, price: e.target.value })
-                }} className='form-control' placeholder='Price' required />
-              </div>
-            </div>
-
-          </div>
-        </ModalBody>
+            </ModalBody>
             <ModalFooter>
               <div className='bg-pink-600'>
                 <Button color='primary' type='submit'>

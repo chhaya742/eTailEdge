@@ -18,10 +18,15 @@ const Menuitems = [
     title: "orders",
     icon: "shopping-cart",
     href: "/admin/orders",
-  },  {
+  }, 
+   {
+    title: "Users",
+    icon: "user",
+    href: "/admin/user",
+  }, {
     title: "Setting",
     icon: "eye",
-    href: "/admin/all-product",
+    href: "/admin/setting",
   },
   
 ];

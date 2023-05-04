@@ -3,8 +3,9 @@ import Link from "next/link"
 import knex from '../database-config'
 // var jwt = require('jsonwebtoken');
 
-const Order = ({ orders ,product,subtl}) => {
-  // console.log("subtl",subtl);
+const Order = ({ orders ,product,address,subtl}) => {
+  console.log("address",address);
+  let shippingAddress = address.address.concat(" ,", address.state, " ,", address.city, " ,", address.pin);
   // const request=async(orderid)=>{
   //   const order= await knex("order").select("*").where({id:orderid})
   //   console.log(order);
@@ -37,6 +38,11 @@ const Order = ({ orders ,product,subtl}) => {
               <div className=" my-4 py-8">
                 <span className="title-font font-medium text-2xl text-gray-900 ">SubTotal:  ₹{product.price}</span>
                 <Link href={"/track-order"}>   <button className="flex ml-auto text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none hover:bg-pink-600 rounded">Track Order</button></Link>
+
+                <div className='h-9 w-58 bottom-1 p-4 rounded-sm'>
+                <span>{shippingAddress}</span>
+                
+                </div>
               </div>
             </div>
             <img alt="ecommerce" className="lg:w-1/2 w-full h-25 b shadow-sm px-24 object-cover object-top rounded" src={product.image} />
@@ -50,8 +56,9 @@ const Order = ({ orders ,product,subtl}) => {
 export async function getServerSideProps(context) { 
   let orders = await knex("orders").select("*").where({orderId:context.query.id})
   let product= await knex("product").select("*").where({id:orders[0].productid})
+  let address= await knex("address").select("*").where({id:orders[0].address})
   return {
-    props: { orders: JSON.parse(JSON.stringify(orders))[0], product: JSON.parse(JSON.stringify(product))[0]  }
+    props: { orders: JSON.parse(JSON.stringify(orders))[0], product: JSON.parse(JSON.stringify(product))[0] ,address:  JSON.parse(JSON.stringify(address))[0]}
   }
 };
 

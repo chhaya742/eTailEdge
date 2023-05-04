@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState ,useCallback} from 'react'
+import { useEffect, useState, useCallback } from 'react'
 const knex = require('../database-config')
 import axios from 'axios'
 import Link from "next/link"
@@ -30,19 +30,21 @@ const Orders = () => {
       query.offset = 0
       setQuery(query)
     }
+
     await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/get-order`, query).then((res) => {
-      if (!res.data.status) {
+      console.log("res", res.data);
+      if (res.data.error) {
         const resMessage = res.data.data.message
         if (Array.isArray(resMessage)) {
           return toast.error(resMessage[0])
         }
         return toast.error(resMessage)
       }
-
-      const resRow = res.data.data.rows
-      setTotal(res.data.total)
+      console.log(res.data.data.data.rows);
+      const resRow = res.data.data.data.rows
+      setTotal(res.data.data.total.total)
       setOrders(resRow);
-      setProduct(res.data.data.products);
+      setProduct(res.data.data.data.products);
     })
   }
   useEffect(() => {
@@ -50,6 +52,7 @@ const Orders = () => {
     if (!localStorage.getItem("token")) {
       router.push("/")
     } else {
+
       request(localStorage.getItem("token"))
     }
   }, []);
@@ -101,18 +104,18 @@ const Orders = () => {
     )
   }
 
-    const debounce = (func) => {
+  const debounce = (func) => {
     let timer;
     return function () {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-            timer = null;
-            func();
-        }, 800);
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = null;
+        func();
+      }, 800);
     }
-}
+  }
 
-const debouncedSearch = useCallback(debounce(request), [])
+  const debouncedSearch = useCallback(debounce(request), [])
   return (
     <div className='container mx-auto min-h-screen '>
       <div className="row my-4 ">
@@ -157,6 +160,9 @@ const debouncedSearch = useCallback(debounce(request), [])
                 Product name
               </th>
               <th scope="col" className="px-6 py-3">
+                Image
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Color
               </th>
               <th scope="col" className="px-6 py-3">
@@ -182,9 +188,12 @@ const debouncedSearch = useCallback(debounce(request), [])
                     <td className="px-6 py-4">
                       {item.orderId}
                     </td>
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <td className="px-6 py-4">
                       {product[index].title}
-                    </th>
+                    </td>
+                    <td className="px-6 py-4">
+                      {<img src={product[index].image} width={34} height={34} />}
+                    </td>
                     <td className="px-6 py-4">
                       {product[index].color}
                     </td>
@@ -224,30 +233,5 @@ export async function getServerSideProps(context) {
     props: { orders: orders, product: products }
   }
 };
-
-
-
-// <div className="relative shadow-md sm:rounded-lg text-center">
-// <div className="row border-2 mx-auto">
-//   <div className="col-md-1 border-2 border-black">Sr no</div>
-//   <div className="col-md-2 border-2 border-black">Order ID</div>
-//   <div className="col-md-2 border-2 border-black">Category</div>
-//   <div className="col-md-1 border-2 border-black">color</div>
-//   <div className="col-md-1 border-2 border-black">Price</div>
-//   <div className="col-md-2 border-2 border-black">Details</div>
-//   <div className="col-md-3 border-2  border-r-2 border-black">Product Name</div>
-// <div key={item.id}>
-//         <div className="w-100"></div>
-//         <div className="col-md-1">Sr no</div>
-//         <div className="col-md-2">Order ID</div>
-//         <div className="col-md-3">Product Name</div>
-//         <div className="col-md-2">Category</div>
-//         <div className="col-md-1">color</div>
-//         <div className="col-md-1">Price</div>
-//         <div className="col-md-2">Details</div></div>
-//   </div>
-// </div>
-
-
 
 export default Orders
