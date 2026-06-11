@@ -8,52 +8,114 @@ import { MdAccountCircle, MdManageAccounts, MdHelp } from 'react-icons/md'
 import { FcAbout } from 'react-icons/fc'
 import jwt from "jsonwebtoken"
 const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl }) => {
-    const router=useRouter();
+    const router = useRouter();
     const [dropDown, setDropDown] = useState(false)
     const [toggle, settoggle] = useState(false)
-    const [userDetails, setUserDetails] = useState({ name: "", email: "" })
+    const [userDetails, setUserDetails] = useState({ name: "", email: "" });
+
     const toggleCart = () => {
-        settoggle(true)
-    }
+        settoggle(true);
+    };
+
     const handleClick = () => {
-        settoggle(false)
-    }
+        settoggle(false);
+    };
+
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            userDetails.name = jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.name
-            userDetails.email = jwt.decode(localStorage.getItem("token"), { complete: true }).payload.user.email
+            const decoded = jwt.decode(localStorage.getItem("token"), { complete: true });
+            setUserDetails({
+                name: decoded?.payload?.user?.name || "",
+                email: decoded?.payload?.user?.email || ""
+            });
         }
-        let path = ['/checkout', '/order', '/orders']
+
+        let path = ['/checkout', '/order', '/orders'];
         if (path.includes(router.pathname)) {
-            setDropDown(false)
+            setDropDown(false);
         }
-    }, [])
+
+    }, []);
 
     return (
         <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
-            <div className='logo flex items-center' >
+            <div className='logo flex items-center'>
                 <div className='mx-2'>
-                    {dropDown &&
-                        <div onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-9 top-10 shadow-lg bg-pink-200 px-5 py-1 rounded-md w-70 h-60'>
-                            <ul >
-                                <Link href={"/myaccount"}><li className='py-1 hover:text-white  text-base flex '><MdManageAccounts className='py-1 mx-4 text-3xl' /><span className='font-semibold underline'> {userDetails.name}</span></li></Link>
-                                <span className='px-8'> {userDetails.email}</span>
 
-                                <Link href={"/orders"}><li className='py-1 hover:text-white text-lg flex'><BsFillBagCheckFill className='py-1 mx-4  text-3xl' />Orders</li></Link>
+                    {dropDown && (
+                        <div
+                            onMouseOver={() => setDropDown(true)}
+                            onMouseLeave={() => setDropDown(false)}
+                            className='absolute right-9 top-10 shadow-lg bg-pink-200 px-5 py-2 rounded-md w-72 h-60'
+                        >
+                            <ul>
+                                <Link href="/myaccount">
+                                    <li className='py-1 hover:text-white text-base flex items-center'>
+                                        <MdManageAccounts className='mx-3 text-3xl' />
+                                        <span className='font-semibold underline'>{userDetails.name}</span>
+                                    </li>
+                                </Link>
+
+                                <p className='px-8 text-sm'>{userDetails.email}</p>
+
+                                <Link href="/orders">
+                                    <li className='py-1 hover:text-white text-lg flex items-center'>
+                                        <BsFillBagCheckFill className='mx-3 text-3xl' />
+                                        Orders
+                                    </li>
+                                </Link>
+
                                 <hr />
-                                <Link href={"/about"}><li className='py-1 hover:text-white text-lg flex'><FcAbout className='py-1 mx-4 text-black text-3xl' />About</li></Link>
 
-                                <Link href={"/help"}><li className='py-1 hover:text-white text-lg flex'><MdHelp className='py-1 mx-4  text-3xl' />Help</li></Link>
+                                <Link href="/about">
+                                    <li className='py-1 hover:text-white text-lg flex items-center'>
+                                        <FcAbout className='mx-3 text-3xl' />
+                                        About
+                                    </li>
+                                </Link>
 
+                                <Link href="/help">
+                                    <li className='py-1 hover:text-white text-lg flex items-center'>
+                                        <MdHelp className='mx-3 text-3xl' />
+                                        Help
+                                    </li>
+                                </Link>
                             </ul>
-                            <div onClick={logout} className='py-1 absolute bottom-2 hover:text-white text-lg flex' ><AiOutlineLogout className='py-1 mx-1  text-3xl' />logout</div>
-                        </div>}
-                        {user.value && <MdAccountCircle onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className='absolute right-16 top-4 text-xl md:text-2xl cursor-pointer mr-4' />}
-                    {!user.value && <Link href={"/login"}>
-                        <button className='bg-pink-600 px-1 py-1 rounded-md absolute right-16 top-1 text-xl md:text-xl cursor-pointer mr-4'>login</button>
-                    </Link>}
+
+                            <div
+                                onClick={logout}
+                                className='py-1 absolute bottom-2 hover:text-white text-lg flex items-center cursor-pointer'
+                            >
+                                <AiOutlineLogout className='mx-2 text-3xl' />
+                                Logout
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Profile Icon */}
+                    {user.value && (
+                        <MdAccountCircle
+                            onMouseOver={() => setDropDown(true)}
+                            onMouseLeave={() => setDropDown(false)}
+                            className='absolute right-16 top-4 text-2xl cursor-pointer mr-4'
+                        />
+                    )}
+
+                    {/* Login Button */}
+                    {!user.value && (
+                        <Link
+                            href="/login"
+                            className='px-3 py-1 absolute right-16 top-2 text-black text-lg cursor-pointer'
+                        >
+                            Login
+                        </Link>
+                    )}
+
                 </div>
-                <Link href={"/"} className="mr-1"> <img src="/logo.png" alt="" className="w-40 h-15" /></Link>
+
+                <Link href="/" className="mr-1">
+                    <img src="/logo.png" alt="logo" className="w-40 h-15" />
+                </Link>
             </div>
             <div className='nav'>
                 <ul className='flex items-center space-x-5 font-bold md:text-base'>
@@ -64,7 +126,7 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
                     <Link href={"/category/gift"}><li className=" hover:text-pink-500">Gift</li></Link>
                 </ul>
             </div>
-            <div onClick={toggleCart} className='cart mx-5 absolute top-4 right-0'>
+            <div onClick={toggleCart} className='cart mx-5 absolute right-0'>
                 <AiOutlineShoppingCart className='text-xl md:text-2xl cursor-pointer' />
             </div>
             {toggle && <div className={`w-72 h-[100vh] sideCart overflow-y-scroll absolute top-0 right-0 bg-pink-100 px-8 py-10 transform transition-transform`} >

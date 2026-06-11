@@ -1,12 +1,11 @@
 import Head from 'next/head'
 import MySlider from '../components/MySlider'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {incNumber,decNumber  } from '../src/redux/counter';
 export default function Home() {
 
-  // const myState = useSelector((state) => { state.changeTheNumber })
+  const myState = useSelector((state) => { state.changeTheNumber })
   const dispatch = useDispatch()
-  // console.log("myState", myState);
   return (
     <>
       <Head>
@@ -18,7 +17,7 @@ export default function Home() {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </Head>
       <main className='bg-slate-200' >
-        <div className='container'>
+        {/* <div className='container'>
           <h2>Increment /decrement counter</h2>
           <div className='quantity m-3'>
             <button type="button" className="btn btn-info" onClick={()=>dispatch(decNumber())}>-</button>
@@ -26,7 +25,7 @@ export default function Home() {
             <button type="button" className="btn btn-info" onClick={()=>dispatch(incNumber())}>+</button>
 
           </div>
-        </div>
+        </div> */}
         <div className='container mx-auto'>
           <MySlider />
           {  /*<img className="w-full  h-full w-100" src="/banner.png" alt='eTailEdge' />*/}
@@ -38,7 +37,7 @@ export default function Home() {
                 <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Wear the Code with eTailEdge.com</h1>
                 <p className="lg:w-1/2 w-full leading-relaxed text-gray-500">Wear Whatever you want? What do you want ? You want code ? So why not wear the code</p>
               </div>
-              // <div className="flex flex-wrap -m-4">
+              {/* // <div className="flex flex-wrap -m-4">
               //   <div className="xl:w-1/3 md:w-1/2 p-4">
               //     <div className="border border-gray-200 p-6 rounded-lg">
               //       <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
@@ -108,7 +107,7 @@ export default function Home() {
               //       <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
               //     </div>
               //   </div>
-              // </div>
+              // </div> */}
             </div>
           </section>
         </div>

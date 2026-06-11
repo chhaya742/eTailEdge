@@ -1,14 +1,12 @@
-// ** Redux Imports
-import rootReducer from './rootReducer'
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "./rootReducer";
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: getDefaultMiddleware => {
-    return getDefaultMiddleware({
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
       serializableCheck: false
     })
-  }
-})
+});
 
-export { store }
+export default store;
