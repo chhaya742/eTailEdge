@@ -1,60 +1,157 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/Ai'
-import { BsFillBagCheckFill } from 'react-icons/Bs'
-import { MdAccountCircle } from 'react-icons/Md'
-const NavBar = ({ cart, addToCart, removeCart, clearCart, subtl }) => {
+import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle, AiOutlineLogout } from 'react-icons/ai'
+import { BsFillBagCheckFill } from 'react-icons/bs'
+import { MdAccountCircle, MdManageAccounts, MdHelp } from 'react-icons/md'
+import { FcAbout } from 'react-icons/fc'
+import jwt from "jsonwebtoken"
+const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl }) => {
+    const router = useRouter();
+    const [dropDown, setDropDown] = useState(false)
     const [toggle, settoggle] = useState(false)
+    const [userDetails, setUserDetails] = useState({ name: "", email: "" });
+
     const toggleCart = () => {
-        settoggle(true)
-    }
+        settoggle(true);
+    };
+
     const handleClick = () => {
-        settoggle(false)
-    }
+        settoggle(false);
+    };
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            const decoded = jwt.decode(localStorage.getItem("token"), { complete: true });
+            setUserDetails({
+                name: decoded?.payload?.user?.name || "",
+                email: decoded?.payload?.user?.email || ""
+            });
+        }
+
+        let path = ['/checkout', '/order', '/orders'];
+        if (path.includes(router.pathname)) {
+            setDropDown(false);
+        }
+
+    }, []);
+
     return (
         <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
-
-            <div className='logo flex items-center' >
+            <div className='logo flex items-center'>
                 <div className='mx-2'>
-                <Link href={"/login"}> <MdAccountCircle className='text-xl md:text-2xl cursor-pointer' /></Link>
-                </div>
-                <Link href={"/"} className="mr-1"> <img src="/logo.png" alt="" className="w-40 h-15" /></Link>
-            </div>
 
+                    {dropDown && (
+                        <div
+                            onMouseOver={() => setDropDown(true)}
+                            onMouseLeave={() => setDropDown(false)}
+                            className='absolute right-9 top-10 shadow-lg bg-pink-200 px-5 py-2 rounded-md w-72 h-60'
+                        >
+                            <ul>
+                                <Link href="/myaccount">
+                                    <li className='py-1 hover:text-white text-base flex items-center'>
+                                        <MdManageAccounts className='mx-3 text-3xl' />
+                                        <span className='font-semibold underline'>{userDetails.name}</span>
+                                    </li>
+                                </Link>
+
+                                <p className='px-8 text-sm'>{userDetails.email}</p>
+
+                                <Link href="/orders">
+                                    <li className='py-1 hover:text-white text-lg flex items-center'>
+                                        <BsFillBagCheckFill className='mx-3 text-3xl' />
+                                        Orders
+                                    </li>
+                                </Link>
+
+                                <hr />
+
+                                <Link href="/about">
+                                    <li className='py-1 hover:text-white text-lg flex items-center'>
+                                        <FcAbout className='mx-3 text-3xl' />
+                                        About
+                                    </li>
+                                </Link>
+
+                                <Link href="/help">
+                                    <li className='py-1 hover:text-white text-lg flex items-center'>
+                                        <MdHelp className='mx-3 text-3xl' />
+                                        Help
+                                    </li>
+                                </Link>
+                            </ul>
+
+                            <div
+                                onClick={logout}
+                                className='py-1 absolute bottom-2 hover:text-white text-lg flex items-center cursor-pointer'
+                            >
+                                <AiOutlineLogout className='mx-2 text-3xl' />
+                                Logout
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Profile Icon */}
+                    {user.value && (
+                        <MdAccountCircle
+                            onMouseOver={() => setDropDown(true)}
+                            onMouseLeave={() => setDropDown(false)}
+                            className='absolute right-16 top-4 text-2xl cursor-pointer mr-4'
+                        />
+                    )}
+
+                    {/* Login Button */}
+                    {!user.value && (
+                        <Link
+                            href="/login"
+                            className='px-3 py-1 absolute right-16 top-2 text-black text-lg cursor-pointer'
+                        >
+                            Login
+                        </Link>
+                    )}
+
+                </div>
+
+                <Link href="/" className="mr-1">
+                    <img src="/logo.png" alt="logo" className="w-40 h-15" />
+                </Link>
+            </div>
             <div className='nav'>
                 <ul className='flex items-center space-x-5 font-bold md:text-base'>
-                    <Link href={"/tshirts"}><li >Tshirts</li></Link>
-                    <Link href={"/hoodies"}><li >Hoodies</li></Link>
-                    <Link href={"/stickers"}><li>Stickers</li></Link>
-                    <Link href={"/mugs"}><li>Mugs</li></Link>
+                    <Link href={"/category/tshirts"}><li className=" hover:text-pink-500">Tshirts</li></Link>
+                    <Link href={"/category/hoodies"}><li className=" hover:text-pink-500">Hoodies</li></Link>
+                    <Link href={"/category/stickers"}><li className=" hover:text-pink-500">Stickers</li></Link>
+                    <Link href={"/category/mugs"}><li className=" hover:text-pink-500">Mugs</li></Link>
+                    <Link href={"/category/gift"}><li className=" hover:text-pink-500">Gift</li></Link>
                 </ul>
             </div>
-            <div onClick={toggleCart} className='cart mx-5 absolute top-4 right-0'>
+            <div onClick={toggleCart} className='cart mx-5 absolute right-0'>
                 <AiOutlineShoppingCart className='text-xl md:text-2xl cursor-pointer' />
             </div>
-            {toggle && <div className={`w-72 h-34 sideCart absolute top-0 right-0 bg-pink-100 px-8 py-10 transform transition-transform`} >
+            {toggle && <div className={`w-72 h-[100vh] sideCart overflow-y-scroll absolute top-0 right-0 bg-pink-100 px-8 py-10 transform transition-transform`} >
                 <h2 className='font-bold text-xl text-center'>Shopping Cart</h2>
                 <span className='absolute top-5 right-2 cursor-pointer text-2xl text-pink-500'><AiFillCloseCircle onClick={handleClick} /></span>
                 <ol className='list-decimal font-semibold' >
+
                     {Object.keys(cart).length == 0 && <div className='my-4 font-semibold'> Your cart is empty !</div>}
-                    {Object.keys(cart).map((item) => {
+                    {localStorage.getItem("cart") != null ? Object.keys(cart).map((item) => {
                         return <li key={item}>
                             <div className="item flex my-5">
                                 <div className='w-2/3 font-semibold'> {cart[item].name}</div>
-                                <div className='flex font-semibold items-center justify-center w-1/3' ><AiFillMinusCircle onClick={() => removeCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer text-base text-pink-500' /><span className='mx-2 text-sm'>{cart[item].qyt}</span><AiFillPlusCircle onClick={() => addToCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer te xt-base text-pink-500' /></div>
+                                <div className='flex font-semibold items-center justify-center w-1/3' ><AiFillMinusCircle onClick={() => removeCart(item, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer text-base text-pink-500' /><span className='mx-2 text-sm'>{cart[item].qyt}</span><AiFillPlusCircle onClick={() => addToCart(item, cart[item].id, 1, cart[item].price, cart[item].size, cart[item].name, cart[item].variant)} className='cursor-pointer te xt-base text-pink-500' /></div>
                             </div>
                         </li>
-                    })}
+                    }) : <div className='my-4 font-semibold'> Your cart is empty !</div>}
                 </ol>
-                <div className="total font-bold">Subtotal: ₹{subtl}</div>
+                <div className="total font-bold">Subtotal: ₹{localStorage.getItem("cart") != null ? subtl : 0}</div>
                 <div className="flex mt-5 ">
-                    <Link href={"/checkout"}> <button className="flex mx-auto  text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm"> <BsFillBagCheckFill className='m-1' />checkout</button></Link>
 
-                    <button onClick={clearCart} className="flex mx-auto px-2 text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm"> Clear Cart</button>
+                    <Link href={localStorage.getItem("token") ? "/checkout" : "/login"}> <button disabled={subtl > 0 ? false : true} className="flex mx-auto  text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm disabled:bg-pink-300"> <BsFillBagCheckFill className='m-1' />checkout</button></Link>
+
+                    <button disabled={subtl > 0 ? false : true} onClick={clearCart} className="flex mx-auto px-2 text-white bg-pink-500 border-0 pr-2 py-1 focus:outline-none hover:bg-pink-600 rounded text-sm disabled:bg-pink-300"> Clear Cart</button>
                 </div>
             </div>}
-
         </div>
     )
 }

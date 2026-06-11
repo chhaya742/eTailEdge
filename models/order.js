@@ -14,7 +14,6 @@ knex.schema.hasTable('order').then(function(exists) {
 
 
 // knex.schema.hasTable('order').then(function(exists) {
-//     console.log(exists)
 //     if (!exists) {
 //         return knex.schema.createTable('order', (table) => {
 //             table.increments('id');
