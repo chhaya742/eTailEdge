@@ -54,6 +54,7 @@
     "react-top-loading-bar": "^2.3.1",
     "reactstrap": "^9.1.6",
     "redux": "^4.2.1",
+    "sharp": "^0.35.1",
     "styled-components": "^5.3.9",
     "sweetalert2": "^11.7.3",
     "sweetalert2-react-content": "^5.0.7",

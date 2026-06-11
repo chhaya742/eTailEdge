@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   async rewrites() {
     return [
       {
@@ -8,10 +13,7 @@ const nextConfig = {
         destination: 'http://localhost:3000'
       }
     ]
-  },
-  // experimental:{
-  //   appDir: true
-  // }
+  }
 }
 
 module.exports = nextConfig

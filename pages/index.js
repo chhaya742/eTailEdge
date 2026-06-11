@@ -51,7 +51,7 @@ export default function Home() {
               </h1>
               <p className="text-base text-neutral-500 max-w-sm leading-relaxed font-light mb-10">
                 Premium essentials designed for people who value quality over noise. 
-                Minimal cuts. Lasting fabric. Nothing you don't need.
+                Minimal cuts. Lasting fabric. Nothing you don&apos;t need.
               </p>
               <div className="flex flex-wrap gap-3">
                 <button className="text-xs tracking-widest uppercase font-medium bg-neutral-900 text-white px-8 py-3.5 hover:bg-[#C9A84C] transition-colors duration-300">
@@ -137,7 +137,7 @@ export default function Home() {
             Wear what you mean.
           </h2>
           <p className="text-neutral-400 font-light max-w-xs mx-auto mb-10 leading-relaxed text-sm">
-            Every piece is made in limited quantities. Once it's gone, it's gone.
+            Every piece is made in limited quantities. Once it&apos;s gone, it&apos;s gone.
           </p>
           <button className="text-xs tracking-widest uppercase font-medium bg-[#C9A84C] text-white px-10 py-3.5 hover:bg-white hover:text-neutral-900 transition-colors duration-300">
             Shop the Drop
