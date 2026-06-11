@@ -1,4 +1,4 @@
-import "dotenv"
+require('dotenv').config();
 const mode = "test"
 let options;
 if (mode == "live") {
@@ -6,21 +6,24 @@ if (mode == "live") {
         client: 'mysql',
         connection: {
             ssl: {},
-            database: "codeswear",
-            username: "p8inah4e72e66fdtypz9",
-            host: "aws.connect.psdb.cloud",
-            password: "pscale_pw_HOVtwByCcR377FUoN8ye7ORk8iBfkGfUOepw99boJIm"
+            database: process.env.LOCAL_DATABASE_NAME,
+            username: process.env.LOCAL_DATABASE_USERNAME,
+            host: process.env.LOCAL_DATABASE_HOST,
+            password: process.env.LOCAL_DATABASE_PASSWORD
         }
     }
 } else {
     options = {
         client: 'mysql',
         connection: {
-            host: 'localhost',
-            port: "3306",
-            user: 'root',
-            password: 'Chhaya@123',
-            database: 'codeswear'
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            ssl: {
+                rejectUnauthorized: false
+            }
         }
     }
 }
