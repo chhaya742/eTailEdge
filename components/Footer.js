@@ -15,7 +15,7 @@ const Footer = () => {
         {/* Logo & Description */}
         <div className="w-64 mx-auto md:mx-0 text-center md:text-left">
           <Link href="/">
-            <Image
+            <img
               src="/logo.png"
               alt="eTailEdge logo"
               width={120}
