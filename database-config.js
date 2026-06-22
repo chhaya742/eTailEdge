@@ -1,18 +1,7 @@
 require('dotenv').config();
-const mode = "test"
+const mode = "live"
 let options;
 if (mode == "live") {
-    options = {
-        client: 'mysql',
-        connection: {
-            ssl: {},
-            database: process.env.LOCAL_DATABASE_NAME,
-            username: process.env.LOCAL_DATABASE_USERNAME,
-            host: process.env.LOCAL_DATABASE_HOST,
-            password: process.env.LOCAL_DATABASE_PASSWORD
-        }
-    }
-} else {
     options = {
         client: 'mysql',
         connection: {
@@ -24,6 +13,18 @@ if (mode == "live") {
             ssl: {
                 rejectUnauthorized: false
             }
+        }
+    }
+} else {
+    options = {
+        client: 'mysql',
+        connection: {
+
+            ssl: {},
+            database: process.env.LOCAL_DATABASE_NAME,
+            username: process.env.LOCAL_DATABASE_USERNAME,
+            host: process.env.LOCAL_DATABASE_HOST,
+            password: process.env.LOCAL_DATABASE_PASSWORD
         }
     }
 }
