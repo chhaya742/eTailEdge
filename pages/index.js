@@ -21,9 +21,6 @@ export default function Home() {
         <meta name="description" content="Premium minimal clothing for developers and creatives." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </Head>
 
       <div className="bg-white text-neutral-900 min-h-screen" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -50,7 +47,7 @@ export default function Home() {
                 to <span className="italic text-[#C9A84C]">think.</span>
               </h1>
               <p className="text-base text-neutral-500 max-w-sm leading-relaxed font-light mb-10">
-                Premium essentials designed for people who value quality over noise. 
+                Premium essentials designed for people who value quality over noise.
                 Minimal cuts. Lasting fabric. Nothing you don&apos;t need.
               </p>
               <div className="flex flex-wrap gap-3">
@@ -66,7 +63,7 @@ export default function Home() {
             {/* right: accent card */}
             <div className="relative hidden md:block">
               <div className="aspect-[3/4] bg-neutral-200 w-full max-w-sm ml-auto overflow-hidden">
-                <img src="/banner.png" alt="eTailEdge collection" className="w-full h-full object-cover" onError={e => e.target.style.display='none'} />
+                <img src="/banner.png" alt="eTailEdge collection" className="w-full h-full object-cover" onError={e => e.target.style.display = 'none'} />
               </div>
               {/* floating tag */}
               <div className="absolute bottom-8 -left-6 bg-white shadow-lg px-5 py-4">

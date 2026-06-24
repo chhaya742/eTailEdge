@@ -316,7 +316,7 @@ const Listing = () => {
     const [image, setimage] = useState(null)
     const onSubmit = async (e) => {
       if (formData) {
-        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, formData)
+        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/order/order`, formData)
         if (data) {
           // request()
           setEditModal(false)

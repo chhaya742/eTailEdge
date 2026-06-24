@@ -1,3 +1,5 @@
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import 'bootstrap/dist/css/bootstrap.css'
 import "../styles/globals.css";
 import Footer from 'components/Footer'
@@ -47,7 +49,9 @@ export default function App({ Component, pageProps }) {
     const key = Object.keys(myCart)
 
     for (let i = 0; i < key.length; i++) {
-
+      console.log(myCart[key[i]]);
+      console.log("Price:", myCart[key[i]].price);
+      console.log("Qty:", myCart[key[i]].qyt);
       subtl += parseInt(myCart[key[i]].price) * parseInt(myCart[key[i]].qyt)
 
     }

@@ -11,7 +11,7 @@ const ResetPassword = () => {
     const request = async () => {
         // user.token = localStorage.getItem("token")
         // console.log(router.query);
-        const {data} = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/authentication/update-password?token=${router.query.token}`, user)
+        const {data} = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/authentication/update-password?token=${router.query.token}`, user)
         // console.log(data);
         if(data.status){
             localStorage.setItem("token", data.data[0].token)

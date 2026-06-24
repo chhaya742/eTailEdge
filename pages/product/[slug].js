@@ -13,7 +13,7 @@ const Slug = ({ error, cart, addToCart, removeCart, buyNow, subtl, products, col
   const [service, setservice] = useState()
 
   const CheckServiceAbility = async () => {
-    let data = await fetch(`${process.env.NEXT_PUBLIC_localhost}/api/pincode`)
+    let data = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/pincode`)
     data = await data.json();
 
     if (Object.keys(data).includes((pin))) {
@@ -38,7 +38,7 @@ const Slug = ({ error, cart, addToCart, removeCart, buyNow, subtl, products, col
   }, [router.query])
 
   const refreshVariant = (newSize, newColor) => {
-    let url = `${process.env.NEXT_PUBLIC_localhost}/product/${colorSizeSlug[newColor][newSize]['slug']}`
+    let url = `${process.env.NEXT_PUBLIC_APP_URL}/product/${colorSizeSlug[newColor][newSize]['slug']}`
     router.push(url)
 
   }

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const mode = "live"
+const mode = "test"
 let options;
 if (mode == "live") {
     options = {
@@ -17,14 +17,12 @@ if (mode == "live") {
     }
 } else {
     options = {
-        client: 'mysql',
+        client: "mysql2",
         connection: {
-
-            ssl: {},
-            database: process.env.LOCAL_DATABASE_NAME,
-            username: process.env.LOCAL_DATABASE_USERNAME,
             host: process.env.LOCAL_DATABASE_HOST,
-            password: process.env.LOCAL_DATABASE_PASSWORD
+            user: process.env.LOCAL_DATABASE_USERNAME,
+            password: process.env.LOCAL_DATABASE_PASSWORD,
+            database: process.env.LOCAL_DATABASE_NAME
         }
     }
 }

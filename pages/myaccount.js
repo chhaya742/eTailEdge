@@ -32,7 +32,7 @@ const MyAccount = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
       setemail(parseInt(decodedToken.payload.user.email))
       userDetails.productid = pId
       userDetails.amount = subtl
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/order`, userDetails)
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/order/order`, userDetails)
       if (data.status) {
         toast.success(data.data.message)
         if (localStorage.getItem("token")) {
@@ -79,7 +79,7 @@ const MyAccount = ({ cart, clearCart, addToCart, removeCart, subtl }) => {
       else if (e.name === 'pin') {
         setpin(e.value)
         if (e.value.length == 6) {
-          let data = await fetch(`${process.env.NEXT_PUBLIC_localhost}/api/pincode`)
+          let data = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/pincode`)
           data = await data.json();
           if (Object.keys(data).includes((e.value))) {
             setstate(data[e.value][1])

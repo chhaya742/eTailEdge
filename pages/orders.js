@@ -31,7 +31,7 @@ const Orders = () => {
       setQuery(query)
     }
 
-    await axios.post(`${process.env.NEXT_PUBLIC_localhost}/api/order/get-order`, query).then((res) => {
+    await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/order/get-order`, query).then((res) => {
       console.log("res", res.data);
       if (res.data.error) {
         const resMessage = res.data.data.message
