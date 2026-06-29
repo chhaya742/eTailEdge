@@ -1,105 +1,129 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaFacebookF } from "react-icons/fa";
-import {
-  TiSocialTwitter,
-  TiSocialLinkedin,
-  TiSocialInstagram,
-} from "react-icons/ti";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+const NAV_SECTIONS = [
+  {
+    heading: "Shop",
+    links: [
+      { label: "T-Shirts", href: "/category/tshirts" },
+      { label: "Hoodies", href: "/category/hoodies" },
+      { label: "Mugs", href: "/category/mugs" },
+      { label: "Stickers", href: "/category/stickers" },
+    ],
+  },
+  {
+    heading: "Policy",
+    links: [
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Return & Refund", href: "/return-policy" },
+      { label: "Terms & Conditions", href: "/terms-conditions" },
+      { label: "Shipping Policy", href: "/shipping-policy" },
+    ],
+  },
+  {
+    heading: "Help",
+    links: [
+      { label: "Contact Us", href: "/contact" },
+      { label: "FAQs", href: "/faq" },
+      { label: "Track Order", href: "/track-order" },
+      { label: "My Orders", href: "/my-orders" },
+    ],
+  },
+  {
+    heading: "About",
+    links: [
+      { label: "About Us", href: "/about" },
+      { label: "Blog", href: "/blog" },
+      { label: "Careers", href: "/careers" },
+      { label: "Support", href: "/support" },
+    ],
+  },
+];
+
+const SOCIAL_LINKS = [
+  { label: "Facebook",  href: "https://facebook.com",  Icon: FaFacebookF },
+  { label: "Instagram", href: "https://instagram.com", Icon: FaInstagram  },
+  { label: "LinkedIn",  href: "https://linkedin.com",  Icon: FaLinkedinIn },
+  { label: "X",         href: "https://twitter.com",   Icon: FaXTwitter   },
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 const Footer = () => {
   return (
-    <footer className="text-gray-600 body-font bg-white border-t">
-      <div className="container px-5 py-16 mx-auto flex md:items-start md:flex-row flex-col">
-        {/* Logo & Description */}
-        <div className="w-64 mx-auto md:mx-0 text-center md:text-left">
-          <Link href="/">
-            <img
+    <footer className="bg-white border-t border-gray-200 text-gray-500 text-sm">
+
+      {/* ── Main grid ─────────────────────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-5 gap-10">
+
+        {/* Brand column */}
+        <div className="md:col-span-1 flex flex-col gap-4">
+          <Link href="/" className="inline-block">
+            <Image
               src="/logo.png"
-              alt="eTailEdge logo"
+              alt="eTailEdge"
               width={120}
-              height={50}
-              className="mx-auto md:mx-0"
+              height={40}
+              className="object-contain"
+              priority
             />
           </Link>
-          <p className="mt-3 text-sm text-gray-500">
-            Wear the Code. Premium apparel and accessories designed for developers,
-            creators and tech enthusiasts.
+          <p className="leading-relaxed text-gray-400 max-w-xs">
+            Premium apparel and accessories designed for developers, creators,
+            and tech enthusiasts.
           </p>
         </div>
 
-        {/* Links Section */}
-        <div className="flex-grow flex flex-wrap md:pl-20 mt-10 md:mt-0 text-center md:text-left">
-          {/* Shop */}
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="font-semibold text-gray-900 text-sm mb-3">SHOP</h2>
-            <nav className="list-none space-y-2">
-              <li><Link href="/category/tshirts" className="hover:text-black">T-Shirts</Link></li>
-              <li><Link href="/category/hoodies" className="hover:text-black">Hoodies</Link></li>
-              <li><Link href="/category/mugs" className="hover:text-black">Mugs</Link></li>
-              <li><Link href="/category/stickers" className="hover:text-black">Stickers</Link></li>
-            </nav>
+        {/* Nav columns */}
+        {NAV_SECTIONS.map(({ heading, links }) => (
+          <div key={heading}>
+            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-900 mb-4">
+              {heading}
+            </h3>
+            <ul className="space-y-2.5">
+              {links.map(({ label, href }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-gray-500 hover:text-gray-900 transition-colors duration-150"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
+        ))}
+      </div>
 
-          {/* Policy */}
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="font-semibold text-gray-900 text-sm mb-3">POLICY</h2>
-            <nav className="list-none space-y-2">
-              <li><Link href="/privacy-policy" className="hover:text-black">Privacy Policy</Link></li>
-              <li><Link href="/return-policy" className="hover:text-black">Return & Refund Policy</Link></li>
-              <li><Link href="/terms-conditions" className="hover:text-black">Terms & Conditions</Link></li>
-              <li><Link href="/shipping-policy" className="hover:text-black">Shipping Policy</Link></li>
-            </nav>
-          </div>
+      {/* ── Bottom bar ────────────────────────────────────────────────────── */}
+      <div className="border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-gray-400 text-xs">
+            © {new Date().getFullYear()} eTailEdge. All rights reserved.
+          </p>
 
-          {/* Help */}
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="font-semibold text-gray-900 text-sm mb-3">HELP</h2>
-            <nav className="list-none space-y-2">
-              <li><Link href="/contact" className="hover:text-black">Contact Us</Link></li>
-              <li><Link href="/faq" className="hover:text-black">FAQs</Link></li>
-              <li><Link href="/track-order" className="hover:text-black">Track Order</Link></li>
-              <li><Link href="/my-orders" className="hover:text-black">My Orders</Link></li>
-            </nav>
-          </div>
-
-          {/* About */}
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="font-semibold text-gray-900 text-sm mb-3">ABOUT</h2>
-            <nav className="list-none space-y-2">
-              <li><Link href="/about" className="hover:text-black">About Us</Link></li>
-              <li><Link href="/blog" className="hover:text-black">Blog</Link></li>
-              <li><Link href="/careers" className="hover:text-black">Careers</Link></li>
-              <li><Link href="/support" className="hover:text-black">Support</Link></li>
-            </nav>
+          <div className="flex items-center gap-4">
+            {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Follow us on ${label}`}
+                className="text-gray-400 hover:text-gray-900 transition-colors duration-150"
+              >
+                <Icon size={15} />
+              </a>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="bg-neutral-900">
-        <div className="container mx-au
-        to py-4 px-5 flex flex-col sm:flex-row items-center">
-          <p className="text-gray-300 text-sm text-center sm:text-left">
-            © {new Date().getFullYear()} eTailEdge — All Rights Reserved
-          </p>
-          <span className="inline-flex text-center sm:ml-auto mt-3 sm:mt-0 space-x-4">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
-              <FaFacebookF />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
-              <TiSocialLinkedin />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
-              <TiSocialInstagram />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
-              <TiSocialTwitter />
-            </a>
-          </span>
-        </div>
-      </div>
     </footer>
   );
 };

@@ -28,8 +28,6 @@ const NavBar = ({ logout, user, cart, addToCart, removeCart, clearCart, subtl })
     useEffect(() => {
         if (localStorage.getItem("token")) {
             const decoded = jwt.decode(localStorage.getItem("token"), { complete: true });
-            console.log(decoded);
-
             setUserDetails({
                 name: decoded?.payload?.name || "",
                 email: decoded?.payload?.email || ""

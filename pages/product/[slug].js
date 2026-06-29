@@ -62,11 +62,11 @@ const Slug = ({ error, cart, addToCart, removeCart, buyNow, subtl, products, col
   }
   return (
     <>
-      {Object.keys(products).map((item) => {
+      {Object.keys(products).map((item) => { 
         return <section key={products[item].id} className="text-gray-600 body-font overflow-hidden">
           <div className="container px-5 py-16 mx-auto">
             <div className="lg:w-4/5 mx-auto flex flex-wrap">
-              <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-top rounded" src={products[item].image} />
+              <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-top rounded" src={`public${products[item].image}`} />
               <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                 <h2 className="text-sm title-font text-gray-500 tracking-widest">eTailEdge</h2>
                 <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{`${products[item].title}(${products[item].size}/${products[item].color})`}</h1>

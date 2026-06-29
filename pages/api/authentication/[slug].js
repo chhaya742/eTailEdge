@@ -31,7 +31,7 @@ async function sendResetEmail(email, token) {
         port: 587,
         secure: false,
         auth: {
-            user: process.env.SMTP_USER,
+            user: process.env.EMAIL_SMTP_USER,
             pass: process.env.SMTP_PASS,
         },
     });
@@ -168,7 +168,7 @@ async function handleResetPassword(req, res) {
     }
 
     try {
-        const [user] = await knex('user').select('email', 'token').where({ email });
+        const [user] = await knex('user').select('email').where({ email });
 
         if (!user) {
             // Same generic message to prevent enumeration
